@@ -4,141 +4,36 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract sbLending{
-    //1
+
+
     struct interestRatePoint{
         uint256 minUtilization;
         uint256 maxUtilization;
         uint256 interestRate;
     }
-    //2
-    interestRatePoint[] public interestRateLists;
-    //3
-    mapping(address => interestRateLists) public tokenInterestRateList;
-    //4
-    struct savedInterstRate{
+
+     struct savedInterstRate{
         uint256 blockTimestamp;
         uint interestRate;
     }
-    //5
-    savedInterstRate[] public interestRateHistory;
-    mapping(address => interestRateHistory) public tokenInterestRateHistory;
-    //add Interest Range+Rate for specific token for interestRateLists;
-    function addInterestRange(uint256 _minUtilization, uint256 _maxUtilization, uint256 interestRate) public onlyOwner(){
-        tokenInterestRateList[address].push(interestRatePoint(_minUtilization,_maxUtilization,interestRate));
-    }
-
-    //calculate the current InterestPoint (Utilization Range and Interest Rate for an specificToken)
-    // address => HistoryList => Last History List
-    function checkCurretPoint(address _token) public view returns(interestRatePoint){
-        interestRateHistory tokenHistory = tokenInterestRateHistory[_token];
-        uint lastPointId = tokenHistory.length;
-        
-        return tokenHistory[lastPointId].interestRatePoint;
-    }
-
-    //check in which Range the current utilization of a token is
-
-     function checkInterestRange(address _token,uint256 _totalDeposit, uint256 _totalBorrow) public {
-
-        uint utilization = _totalBorrow/_totalDeposit;
-        interestRateLists _tokenInterestList = tokenInterestRateList[_token];
-
-        for(uint i; i<_tokenInterestList.length; i++){
-            if(utilization < _tokenInterestList[i].maxUtilization && utilization>_tokenInterestList[i].minUtilization){
-                return _tokenInterestList[i];
-            }
-        }
-     }
-
-    //update the new range for the new Utilization of a token
-
-    function checkUptateInterestRate(address _token,uint256 _totalDeposit, uint256 _totalBorrow) public returns(interestRatePoint){
-        //calculate new Utilization
-        uint utilization = totalBorrow/totalDeposit;
-        //check if currentthe new utilization is out of the current range
-        //if yes => calculate what is the new Range and save in historic data the new range
-        if(utilization > checkCurretPoint().maxUtilization || utilization < checkCurretPoint().maxUtilization){
-
-            savedInterstRate _savedInterstRate = savedInterstRate(block.timestamp,checkInterestRange(_totalDeposit,_totalBorrow).interestRate);
-
-            interestRateHistory.push(_savedInterstRate);
-        } 
-    }
-
-    //calculate the new Interest rate since the last update
-    //First will loop form last saved data
-    //Check if _lastUpate is > then last InterestHistory change
-    //If yes calculate interest and return;
-    //If not, calculate interest and loop to the next history change and repeat
-    function calculateInterestRate(address _token, uint _lastUpdate) public returns(uint){
-        interestRateHistory _currentList = tokenInterestRateHistory[_token];
-        uint totalInterest;
-        for(uint i = _currentList.length; i > 0 ; i-- ){
-            if(_lastUpdate > _currentList[i].blockTimestamp) {
-                totalInterest += (block.timestamp - lastUptate)*_currentList[i].interestRate;
-                return totalInterest;
-            }
-            totalInterest += (block.timestamp - _currentList[i].blockTimestamp)*_currentList[i].interestRatePoints.interestRate;
-        }
-
-        return totalInterest;
-
-
-    }
-
-
 
 
     address[] public soulBondList;
     mapping(address => uint8) public soulBondCategories;
     mapping(uint8 => uint) public categoryPower;
-
-    // mapping(address => mapping(address => uint256)) public ERC20borrowList;
-    // mapping(address => mapping(address => uint256)) public ERC20lendList;
-    mapping(address => uint256) public ethDepositList;
-    mapping(address => uint256) public ethBoworredList;
-    mapping(address => uint256) internal depositBlock;
+    mapping(address => interestRateHistory) public tokenInterestRateHistory;
+    mapping(address => interestRateLists) public tokenInterestRateList;
+    mapping(address => mapping(address => uint256)) public ERC20borrowList;
+    mapping(address => mapping(address => uint256)) public ERC20DepositList;
     mapping(address => bool) public allowedBorrowedTokens;
-    // mapping(address => bool) public allowedLendTokens;
+    mapping(address => bool) public allowedDepositTokens;
 
+    interestRatePoint[] public interestRateLists;
+    savedInterstRate[] public interestRateHistory;
 
     uint256 public baseMaxBorrow = 70;
 
-
-
-
-    function depositEth() public payable {
-
-        require(msg.value > 0);
-        depositBlock[msg.sender] = block.number;
-        ethDepositList[msg.sender] +=msg.value;
-
-    }
-
-    function withdrawEth(uint256 _value) public {
-        require(value>=ethDepositList[msg.sender]);
-        //Update Balance
-        ethDepositList[msg.sender] -= _value;
-        (bool success,) = address(msg.sender).call{ value: value }("");
-        require(success);
-    }
-
-    function borrowEth(uint256 _value) public {
-        //Require that ethBorrowedList[msg.sender] + _value > MaximumBorrow% * TotalDepositValue(in usd);
-
-        totalAllowedBorrow -= _value;
-        ethBorrowedList[msg.sender] += _value;
-        (bool success,) = address(msg.sender).call{ value: value }("");
-        require(success);
-        //Record Borrow Block
-    }
-
-    function payBackEth() public payable{
-        //update total ethBorrowedList + interest
-        //require ethBorrowedList[msg.sender] >= msg.value 
-        totalAllowedBorrow += msg.value;
-        ethBorrowedList[msg.sender] -= msg.value;
-    }
+  
 
     function liquidate(address _user) public {
         //update user ethBorrowedList + interest
@@ -212,25 +107,67 @@ contract sbLending{
         //calculate the entire Vault Health Factor
         // this cannot go over 90% Total boworred = Total Lend
     }
-
-    function borrowInterestRate() public{
-        //calculate  - Borrow will pay more interest
+   function addInterestRange(uint256 _minUtilization, uint256 _maxUtilization, uint256 interestRate) public onlyOwner(){
+        tokenInterestRateList[address].push(interestRatePoint(_minUtilization,_maxUtilization,interestRate));
     }
 
-    function lendInterestRate() public{
-        //Lenders - with better interest then avarage Compound
-
+    //calculate the current InterestPoint (Utilization Range and Interest Rate for an specificToken)
+    // address => HistoryList => Last History List
+    function checkCurretPoint(address _token) public view returns(interestRatePoint){
+        interestRateHistory tokenHistory = tokenInterestRateHistory[_token];
+        uint lastPointId = tokenHistory.length;
+        
+        return tokenHistory[lastPointId].interestRatePoint;
     }
 
-        //lendInterest < borrowInterest
-        //pay more interest lower liquidation price;
+    //check in which Range the current utilization of a token is
 
-    function tokenBorrowInterstRate(address _token) public {
-        //fixed?
+     function checkInterestRange(address _token,uint256 _totalDeposit, uint256 _totalBorrow) public {
+
+        uint utilization = _totalBorrow/_totalDeposit;
+        interestRateLists _tokenInterestList = tokenInterestRateList[_token];
+
+        for(uint i; i<_tokenInterestList.length; i++){
+            if(utilization < _tokenInterestList[i].maxUtilization && utilization>_tokenInterestList[i].minUtilization){
+                return _tokenInterestList[i];
+            }
+        }
+     }
+
+    //update the new range for the new Utilization of a token
+
+    function checkUptateInterestRate(address _token,uint256 _totalDeposit, uint256 _totalBorrow) public returns(interestRatePoint){
+        //calculate new Utilization
+        uint utilization = totalBorrow/totalDeposit;
+        //check if currentthe new utilization is out of the current range
+        //if yes => calculate what is the new Range and save in historic data the new range
+        if(utilization > checkCurretPoint().maxUtilization || utilization < checkCurretPoint().maxUtilization){
+
+            savedInterstRate _savedInterstRate = savedInterstRate(block.timestamp,checkInterestRange(_totalDeposit,_totalBorrow).interestRate);
+
+            interestRateHistory.push(_savedInterstRate);
+        } 
     }
 
-    function tokenLendInterestRate(address _token) public {
-        //fixed?
+    //calculate the new Interest rate since the last update
+    //First will loop form last saved data
+    //Check if _lastUpate is > then last InterestHistory change
+    //If yes calculate interest and return;
+    //If not, calculate interest and loop to the next history change and repeat
+    function calculateInterestRate(address _token, uint _lastUpdate) public returns(uint){
+        interestRateHistory _currentList = tokenInterestRateHistory[_token];
+        uint totalInterest;
+        for(uint i = _currentList.length; i > 0 ; i-- ){
+            if(_lastUpdate > _currentList[i].blockTimestamp) {
+                totalInterest += (block.timestamp - lastUptate)*_currentList[i].interestRate;
+                return totalInterest;
+            }
+            totalInterest += (block.timestamp - _currentList[i].blockTimestamp)*_currentList[i].interestRatePoints.interestRate;
+        }
+
+        return totalInterest;
+
+
     }
 
     function addBorrowToken(address _token) public {
