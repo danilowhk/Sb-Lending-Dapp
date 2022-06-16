@@ -2,18 +2,38 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+  before('', async function(){
+    const SbLending = await hre.ethers.getContractFactory("sbLending");
+    const sbLending = await SbLending.deploy();
+  
+    await sbLending.deployed();
+  
+    console.log("sbLending deployed to:", sbLending.address);
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+  });
+  it("Should Deposit Balance for WETH", async function () {
 
     expect(await greeter.greet()).to.equal("Hola, mundo!");
   });
+  it("Should Withdraw Balance for WETH", async function () {
+
+    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  });
+  it("Should Borrow Balance for WETH", async function () {
+
+    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  });
+
+  it("Should Payback Balance for WETH", async function () {
+
+    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  });
+
+  it("Should Liquidate WETH", async function () {
+
+    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  });
+
+
 });
