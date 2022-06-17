@@ -13,7 +13,8 @@ export const Container = styled.div`
         background: var(--green);
         padding: 2.5rem 3rem;
         text-align:center;
-        border-radius: 0.25rem;
+        border-radius: 1rem;
+        font-size: 1rem;
 
     }
 `;

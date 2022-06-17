@@ -8,8 +8,9 @@ export const Container = styled.div`
     margin: 0 0;
     padding-bottom: 18rem;
 
+
     button{
-        border-radius: 0.5px;
+        /* border-radius: 0.5px; */
         border: 0;
         border-radius: 0.25rem;
         padding: 1rem 1rem;

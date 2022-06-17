@@ -28,6 +28,31 @@ function App() {
   const [isBorrowModal, setIsBorrowModal] = useState(false);
   const [isWallet,setIsWallet] = useState<any>('');
   const [isConnected,setIsConnected] = useState(false);
+  const [provider,setProvider] = useState<any>();
+  //contracts states;
+  const [WETHContract, setWETHContract] = useState<any>();
+  const [DaiContract, setDaiContract] = useState<any>();
+  const [SBLContract, setSBLContract] = useState<any>();
+  const [SbLendingContract, setSbLendingContract] = useState<any>();
+
+
+  //lending Pool Address
+  const SbLendingAddress='';
+  //ERC20 Tokens Address
+  const WETHAddress='';
+  const daiAddress='';
+  const SBLAddress='';
+  //SoulBond Tokens Address
+  const soulBondSAddress='';
+  const soulBondAAddress='';
+  const soulBondBAddress='';
+  const soulBondCAddress='';
+  const soulBondDAddress='';
+
+
+
+
+
 
   const [contract,setContract] = useState("contract");
 
@@ -38,6 +63,7 @@ function App() {
         ethereum.request({ method: 'eth_requestAccounts' });
         const signer = provider.getSigner();
         setIsWallet(signer);
+        setProvider(provider);
     }
   }
 
@@ -60,6 +86,7 @@ function App() {
   function handleCloseBorrowModal(){
     setIsBorrowModal(false);
   }
+
   return (
     <>
       <Header 
@@ -75,11 +102,15 @@ function App() {
         isOpen={isDepositModal}
         onRequestClose={handleCloseDepositModal}
         contract={contract}
+        provider={provider}
+        signer={isWallet}
       />
       <NewBorrowModal
         isOpen={isBorrowModal}
         onRequestClose={handleCloseBorrowModal}
         contract={contract}
+        provider={provider}
+        signer={isWallet}
       />
       <GlobalStyle />
     </>

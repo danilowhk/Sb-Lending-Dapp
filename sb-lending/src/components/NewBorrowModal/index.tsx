@@ -10,9 +10,11 @@ interface NewBorrowModalProps{
     isOpen: boolean;
     onRequestClose: () => void;
     contract: string;
+    provider: any;
+    signer: any;
 }
 
-export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowModalProps) {
+export function NewBorrowModal({ isOpen, onRequestClose,contract , provider, signer} : NewBorrowModalProps) {
     // const {createTransaction} = useTransactions();
 
     const [type, setType] = useState('borrow');
@@ -26,6 +28,8 @@ export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowMod
             if(type=='borrow'){
                 console.log("Borrow WETH")
                 console.log(amount)
+                console.log(provider)
+                console.log(signer)
             } else{
                 console.log("PayBack WETH")
                 console.log(amount)

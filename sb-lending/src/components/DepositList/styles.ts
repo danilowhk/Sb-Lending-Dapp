@@ -11,17 +11,41 @@ export const Container = styled.div`
         margin-bottom:1.5rem;
     }
 
+    span{
+        display: flex;
+        justify-content: space-between;
+        /* align-items:center; */
+        background:white;
+        margin: 0;
+        padding: 0.5rem;
+        padding-left: 1.5rem;
+        padding-right: 9rem;
+        margin-bottom:0.5rem;
+        font-size: 21px;
+
+
+    }
+
 
 
     div{
         display: flex;
         justify-content: space-between;
+        gap: 9rem;
         align-items:center;
         background:white;
-        padding: 1.5rem 3rem;
+        margin-top:0.5rem;
+        margin: 0;
+        padding: 1.5rem 2rem;
         /* border-radius: 0.25rem; */
         /* border-top: 1px solid light-gray; */
-        margin-top:0.5rem;
+        font-size: 21px;
+        /* text-align:center; */
+        
+
+        p{
+            text-align:center;
+        }
         
         
 
@@ -32,6 +56,10 @@ export const Container = styled.div`
             border:0;
             font-weight: 600;
 
+        }
+
+        & + div{
+            margin-top:0.5rem;
         }
       
     }

@@ -10,9 +10,11 @@ interface NewDepositModalProps{
     isOpen: boolean;
     onRequestClose: () => void;
     contract: string;
+    provider: any;
+    signer: any;
 }
 
-export function NewDepositModal({ isOpen, onRequestClose,contract} : NewDepositModalProps) {
+export function NewDepositModal({ isOpen, onRequestClose,contract, provider, signer} : NewDepositModalProps) {
     // const {createTransaction} = useTransactions();
 
     const [type, setType] = useState('deposit');
