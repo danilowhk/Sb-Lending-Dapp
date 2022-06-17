@@ -9,6 +9,8 @@ contract DaiToken is ERC20 {
     address owner;
     constructor() ERC20("DaiToken","Dai"){
         owner = msg.sender;
+        mint(100000000);
+
     }
 
     function mint(uint256 _value) public {
