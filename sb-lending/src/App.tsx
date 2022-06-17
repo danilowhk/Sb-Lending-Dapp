@@ -29,6 +29,7 @@ function App() {
   const [isWallet,setIsWallet] = useState<any>('');
   const [isConnected,setIsConnected] = useState(false);
   const [provider,setProvider] = useState<any>();
+  const [contract,setContract] = useState("contract");
   //contracts states;
   const [WETHContract, setWETHContract] = useState<any>();
   const [DaiContract, setDaiContract] = useState<any>();
@@ -54,18 +55,41 @@ function App() {
 
 
 
-  const [contract,setContract] = useState("contract");
 
- function connectWallet(){
+ async function connectWallet(){
     const {ethereum} = window;
-    if(ethereum){
+    if(ethereum && !isConnected){
         const provider = new ethers.providers.Web3Provider(ethereum);
-        ethereum.request({ method: 'eth_requestAccounts' });
+        await ethereum.request({ method: 'eth_requestAccounts' });
         const signer = provider.getSigner();
         setIsWallet(signer);
         setProvider(provider);
+        setIsConnected(true);
+    } else {
     }
   }
+
+  function depositERC20(){
+
+  }
+
+  function withdrawERC20(){
+
+  }
+
+  function borrowERC20(){
+
+  }
+
+  function paybackERC20(){
+
+  }
+  
+
+  function liquidateERC20(){
+
+  }
+
 
 
 
@@ -86,17 +110,21 @@ function App() {
   function handleCloseBorrowModal(){
     setIsBorrowModal(false);
   }
+  useEffect(()=>{
+  },[]);
 
   return (
     <>
       <Header 
         onConnectWallet={connectWallet}
-        wallet={isWallet}
+        onIsConnected={isConnected}
       />
       
       <Dashboard
         onOpenDepositModal={handleOpenDepositModal}
         onOpenBorrowModal={handleOpenBorrowModal}
+        provider={provider}
+        signer={isWallet}
       />
       <NewDepositModal
         isOpen={isDepositModal}
