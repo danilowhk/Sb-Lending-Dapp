@@ -1,25 +1,25 @@
 import { BorrowList } from "../BorrowList";
-import { HealthFactor } from "../HealthFactor";
-import { List } from "../Lists";
-import { Summary } from "../Summary";
+import { DepositList } from "../DepositList";
 import { Container } from "./styles";
 
-interface DashboardProps{
+interface ListProps{
     onOpenDepositModal: () => void;
     onOpenBorrowModal: () => void;
 }
 
-export function Dashboard({onOpenDepositModal,onOpenBorrowModal}:DashboardProps ){
+
+export function List({onOpenDepositModal,onOpenBorrowModal} : ListProps){
     return(
         <Container>
-            <Summary />
-            <HealthFactor />
-            <List 
+            <DepositList
                 onOpenDepositModal={onOpenDepositModal}
-                onOpenBorrowModal={onOpenBorrowModal}
             />
-        
+
+            <BorrowList
+                onOpenBorrowModal={onOpenBorrowModal}
+
+            />
+
         </Container>
     )
-
-};
+}
