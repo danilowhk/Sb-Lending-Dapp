@@ -3,16 +3,16 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+const ethers = require("hardhat");
 
 async function main() {
 
-  const SbLending = await hre.ethers.getContractFactory("sbLending");
-  const sbLending = await SbLending.deploy();
+  const SbLending = await ethers.getContractFactory("sbLending-V0");
 
   await sbLending.deployed();
 
-  console.log("sbLending deployed to:", sbLending.address);
+  console.log("sbLendingV0 deployed to:", sbLending.address);
+  console.log("https://kovan.etherscan.io/");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
