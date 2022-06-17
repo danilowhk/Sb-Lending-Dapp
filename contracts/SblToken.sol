@@ -9,6 +9,7 @@ contract SblToken is ERC20 {
     address owner;
     constructor() ERC20("SblToken","SBL"){
         owner = msg.sender;
+        mint(100000000);
     }
 
     function mint(uint256 _value) public {

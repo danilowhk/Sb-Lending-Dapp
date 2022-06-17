@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
 
 
 
@@ -28,7 +30,7 @@ contract sbLending{
     //For this contract we are using fixed interest Rate and Fixed Prices for feature test purposes
 
     mapping(address => uint256) public tokenFixedInterestRate;
-    mapping(address => uint256) public tokenFixedPrice;
+    mapping(address => uint256) public tokenOraclePrice;
     
     address owner;
 
@@ -96,8 +98,8 @@ contract sbLending{
       require(IERC20(debtAsset).allowance(msg.sender,address(this)) > debtToCover);
       ERC20BorrowList[debtAsset][user] -= debtToCover;
       IERC20(debtAsset).transferFrom(msg.sender, address(this), debtToCover);
-      uint totalTransferAmount = debtToCover/tokenFixedPrice[collateralAsset]*105/100; //5% fee
-      // or uint totalTransferAmount = debtToCover*tokenFixedPrice[debtAsset]/tokenFixedPrice[collateralAsset]
+      uint totalTransferAmount = debtToCover/tokenOraclePrice[collateralAsset]*105/100; //5% fee
+      // or uint totalTransferAmount = debtToCover*tokenOraclePrice[debtAsset]/tokenOraclePrice[collateralAsset]
       ERC20DepositList[collateralAsset][user] -= totalTransferAmount;
 
       IERC20(collateralAsset).transfer(msg.sender, totalTransferAmount);
@@ -114,7 +116,7 @@ contract sbLending{
     }
     //Add a fixed price to a token
     function addTokenInteresFixedPrice(address _token, uint256 _fixedPrice) public {
-        tokenFixedPrice[_token] = _fixedPrice;
+        tokenOraclePrice[_token] = _fixedPrice;
     }
 
     //get the fixed interest rate from a token Address
@@ -123,7 +125,7 @@ contract sbLending{
     }
     //get a fixed price form a token Address
     function getTokenPrice(address _token) public view returns(uint256){
-        return tokenFixedPrice[_token];
+        return tokenOraclePrice[_token];
     }
 
 

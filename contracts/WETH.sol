@@ -9,6 +9,8 @@ contract WETHToken is ERC20 {
     address owner;
     constructor() ERC20("WETHToken","WETH"){
         owner = msg.sender;
+        mint(100000000);
+
     }
 
     function mint(uint256 _value) public {
