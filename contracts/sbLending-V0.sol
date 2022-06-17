@@ -4,16 +4,14 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-
-
-contract sbLending{
-
-
+contract sbLending {
     address[] public soulBondList;
     mapping(address => uint8) public soulBondCategories;
     mapping(uint8 => uint) public categoryPower;
 
+    mapping(address => address) public ERC20Oracles;
     mapping(address => mapping(address => uint256)) public ERC20BorrowList;
     mapping(address => mapping(address => uint256)) public ERC20DepositList;
     mapping(address => bool) public allowedBorrowedTokens;
@@ -201,6 +199,20 @@ contract sbLending{
     function editCategories(uint8 _category, uint _power) public {
        require(msg.sender == owner);
        categoryPower[_category] = _power;
+    }
+
+    function addOracle(address _token, address _oracle) public {
+        ERC20Oracles[_token] = _oracle;
+    }
+
+    function getLatestPrice(address _token) public view returns(int price) {
+        (
+            /*uint80 roundID*/,
+            price,
+            /*uint startedAt*/,
+            /*uint timeStamp*/,
+            /*uint80 answeredInRound*/
+        ) = AggregatorV3Interface(ERC20Oracles[_token]).latestRoundData();
     }
 
 
