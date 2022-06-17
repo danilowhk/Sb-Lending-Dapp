@@ -3,8 +3,9 @@ import { DepositList } from "../DepositList";
 import { Container } from "./styles";
 
 interface ListProps{
-    onOpenDepositModal: () => void;
-    onOpenBorrowModal: () => void;
+    onOpenDepositModal: (contract:any) => void;
+    onOpenBorrowModal: (contract:any) => void;
+
 }
 
 

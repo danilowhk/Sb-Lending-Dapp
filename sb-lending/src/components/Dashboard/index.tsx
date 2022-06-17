@@ -5,8 +5,8 @@ import { Summary } from "../Summary";
 import { Container } from "./styles";
 
 interface DashboardProps{
-    onOpenDepositModal: () => void;
-    onOpenBorrowModal: () => void;
+    onOpenDepositModal: (contract:any) => void;
+    onOpenBorrowModal: (contract:any) => void;
 }
 
 export function Dashboard({onOpenDepositModal,onOpenBorrowModal}:DashboardProps ){

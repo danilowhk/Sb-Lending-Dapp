@@ -4,7 +4,6 @@ import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 import { FormEvent, useState } from 'react';
-// import {  useTransactions } from '../../hooks/useTransactions';
 
 
 interface NewBorrowModalProps{
@@ -16,15 +15,40 @@ interface NewBorrowModalProps{
 export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowModalProps) {
     // const {createTransaction} = useTransactions();
 
-    const [type, setType] = useState('deposit');
+    const [type, setType] = useState('borrow');
     const [amount,setAmount] = useState(0);
 
 
 
     async function handleSubmit(event: FormEvent){
         event.preventDefault();
-        if(contract == "contract"){
-            console.log("Contract1")
+        if(contract === "WETH"){
+            if(type=='borrow'){
+                console.log("Borrow WETH")
+                console.log(amount)
+            } else{
+                console.log("PayBack WETH")
+                console.log(amount)
+            }
+
+        }
+        if(contract === "DAI"){
+            if(type=='borrow'){
+                console.log("Borrow DAI")
+                console.log(amount)
+            } else{
+                console.log("PayBack DAI")
+                console.log(amount)
+            }
+        }
+        if(contract === "SBL"){
+            if(type=='borrow'){
+                console.log("Borrow SBL")
+                console.log(amount)
+            } else{
+                console.log("PayBack SBL")
+                console.log(amount)
+            }
         }
 
 
@@ -43,6 +67,7 @@ export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowMod
             </button>  
 
             <h2>Borrow/PayBack</h2>
+            <h2>{contract}</h2>
 
 
             <input type="number" 
@@ -55,8 +80,8 @@ export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowMod
                     <RadioBox
                         type="button"
                         className={type === 'deposit' ? 'active' : ''}
-                        onClick={() => { setType('deposit');}}
-                        isActive ={type === 'deposit'}
+                        onClick={() => { setType('borrow');}}
+                        isActive ={type === 'borrow'}
                         activeColor="green"
                     >
                         <img src={incomeImg}></img>  
@@ -65,8 +90,8 @@ export function NewBorrowModal({ isOpen, onRequestClose,contract} : NewBorrowMod
                     <RadioBox
                         type="button"
                         className=""
-                        onClick={() => { setType('withdraw');}}
-                        isActive ={type === 'withdraw'}
+                        onClick={() => { setType('payBack');}}
+                        isActive ={type === 'payBack'}
                         activeColor="red"
                     >
                         <img src={outcomeImg}></img> 

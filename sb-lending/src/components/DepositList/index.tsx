@@ -1,7 +1,7 @@
 import { Container } from "./styles";
 
 interface DepositListProps{
-    onOpenDepositModal: () => void;
+    onOpenDepositModal: (contract:any) => void;
 }
 
 export function DepositList({onOpenDepositModal}:DepositListProps){
@@ -10,22 +10,22 @@ export function DepositList({onOpenDepositModal}:DepositListProps){
         <Container>
             <h1>Deposit Token List</h1>
             <div>
-                <p>Deposit Token 1</p>
-                <p>$10</p>
+                <p>WETH</p>
+                <p>$1100</p>
                 <p>1000</p>
-                <button onClick={onOpenDepositModal}>Deposit Token1</button>
+                <button onClick={()=>onOpenDepositModal('WETH')}>Deposit / Withdraw</button>
             </div>
             <div>
-                <p>Deposit Token 2</p>
-                <p>$5</p>
+                <p>DAI</p>
+                <p>$1</p>
                 <p>2000</p>
-                <button onClick={onOpenDepositModal}>Deposit Token2</button>
+                <button onClick={()=>onOpenDepositModal('DAI')}>Deposit / Withdraw</button>
             </div>
             <div>
-                <p>Deposit Token 3</p>
-                <p>$0.1</p>
+                <p>SBL</p>
+                <p>$17</p>
                 <p>0</p>
-                <button onClick={onOpenDepositModal}>Deposit Token3</button>
+                <button onClick={()=>onOpenDepositModal('SBL')}>Deposit / Withdraw</button>
             </div>
             
         </Container>

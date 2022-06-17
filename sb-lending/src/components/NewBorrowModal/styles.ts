@@ -4,6 +4,7 @@ import { darken, transparentize } from 'polished';
 export const Container = styled.form`
 
     h2{
+        text-align:center;
         color: var(--text-tile);
         font-size: 1.5rem;
         margin-bottom: 2rem;
@@ -14,6 +15,7 @@ export const Container = styled.form`
         padding:0 1.5rem;
         height: 4rem;
         border-radius: 0.25rem;
+        text-align:center;
 
         border: 1px solid #d7d7d7;
         background: #e7e9ee;

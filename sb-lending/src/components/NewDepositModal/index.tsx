@@ -4,7 +4,6 @@ import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 import { FormEvent, useState } from 'react';
-// import {  useTransactions } from '../../hooks/useTransactions';
 
 
 interface NewDepositModalProps{
@@ -23,8 +22,32 @@ export function NewDepositModal({ isOpen, onRequestClose,contract} : NewDepositM
 
     async function handleSubmit(event: FormEvent){
         event.preventDefault();
-        if(contract == "contract"){
-            console.log("Contract1")
+        if(contract === "WETH"){
+            if(type=='deposit'){
+                console.log("Deposit WETH")
+                console.log(amount)
+            } else{
+                console.log("Withdraw WETH")
+                console.log(amount)
+            }
+        }
+        if(contract === "DAI"){
+            if(type=='deposit'){
+                console.log("Deposit WETH")
+                console.log(amount)
+            } else{
+                console.log("Withdraw WETH")
+                console.log(amount)
+            }
+        }
+        if(contract === "SBL"){
+            if(type=='deposit'){
+                console.log("Deposit WETH")
+                console.log(amount)
+            } else{
+                console.log("Withdraw WETH")
+                console.log(amount)
+            }
         }
 
 
@@ -43,6 +66,7 @@ export function NewDepositModal({ isOpen, onRequestClose,contract} : NewDepositM
             </button>  
 
             <h2>Deposit/Withdraw</h2>
+            <h2>{contract}</h2>
 
 
             <input type="number" 
