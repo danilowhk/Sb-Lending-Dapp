@@ -10,18 +10,13 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
 
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
 module.exports = {
   solidity: "0.8.4",
   hardhat: {
     forking: {
-      url: "https://eth-mainnet.alchemyapi.io/v2/<key>",
-      blockNumber: 14390000
+      url: "https://eth-mainnet.alchemyapi.io/v2/EhxZmPeqBdUUx7xW2R_Ra6gJhg3hQzmR",
+      blockNumber: 110000
     }
   }
 };

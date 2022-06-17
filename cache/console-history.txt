@@ -1,0 +1,15 @@
+await hre.ethers.provider.getBlock(1000)
+await hre.ethers.provider.getBlock(1)
+await hre.ethers.provider.getBlock(0)
+await hre.ethers.provider.getBlock(1)
+await hre.ethers.provider.getBlock(0)
+await hre.ethers.provider.getBlock(1)
+await hre.ethers.provider.getBlock(1000)
+await hre.ethers.provider.getBlock(100)
+await hre.ethers.provider.getBalance('0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8')
+hre.ethers.provider.getBalance('0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8')
+hre.ethers.provider.getBalance(0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8)
+hre.ethers.getBlockNumber();
+hre.ethers.getBlock();
+nvm use 14.0.0
+hre.ethers.getBlockNumber()

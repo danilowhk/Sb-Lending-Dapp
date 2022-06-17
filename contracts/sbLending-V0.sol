@@ -12,6 +12,7 @@ contract sbLending {
     mapping(uint8 => uint) public categoryPower;
 
     mapping(address => address) public ERC20Oracles;
+    mapping(address => address) public tokenToOracleToken;
     mapping(address => mapping(address => uint256)) public ERC20BorrowList;
     mapping(address => mapping(address => uint256)) public ERC20DepositList;
     mapping(address => bool) public allowedBorrowedTokens;
@@ -26,7 +27,7 @@ contract sbLending {
     //For this contract we are using fixed interest Rate and Fixed Prices for feature test purposes
 
     mapping(address => uint256) public tokenFixedInterestRate;
-    mapping(address => uint256) public tokenOraclePrice;
+    // mapping(address => uint256) public getTokenPrice;
     
     address owner;
 
@@ -94,8 +95,8 @@ contract sbLending {
       require(IERC20(debtAsset).allowance(msg.sender,address(this)) > debtToCover);
       ERC20BorrowList[debtAsset][user] -= debtToCover;
       IERC20(debtAsset).transferFrom(msg.sender, address(this), debtToCover);
-      uint totalTransferAmount = debtToCover/tokenOraclePrice[collateralAsset]*105/100; //5% fee
-      // or uint totalTransferAmount = debtToCover*tokenOraclePrice[debtAsset]/tokenOraclePrice[collateralAsset]
+      uint totalTransferAmount = debtToCover/getTokenPrice(collateralAsset)*105/100; //5% fee
+      // or uint totalTransferAmount = debtToCover*getTokenPrice[debtAsset]/getTokenPrice[collateralAsset]
       ERC20DepositList[collateralAsset][user] -= totalTransferAmount;
 
       IERC20(collateralAsset).transfer(msg.sender, totalTransferAmount);
@@ -111,8 +112,8 @@ contract sbLending {
         tokenFixedInterestRate[_token] = _interestRate;
     }
     //Add a fixed price to a token
-    function addTokenInteresFixedPrice(address _token, uint256 _fixedPrice) public {
-        tokenOraclePrice[_token] = _fixedPrice;
+    function addTokenPrice(address _token, address _tokenOracle) public {
+        tokenToOracleToken[_token] = _tokenOracle;
     }
 
     //get the fixed interest rate from a token Address
@@ -121,7 +122,8 @@ contract sbLending {
     }
     //get a fixed price form a token Address
     function getTokenPrice(address _token) public view returns(uint256){
-        return tokenOraclePrice[_token];
+        address oracleTokenAddress =tokenToOracleToken[_token];
+        return uint256(getLatestPrice(oracleTokenAddress));
     }
 
 
@@ -160,7 +162,7 @@ contract sbLending {
         uint256 maxBorrow = baseMaxBorrow;
         for(uint i; i < soulBondList.length ; i++){
             if(IERC721(soulBondList[i]).balanceOf(_user)>0){
-                maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]];
+                maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]]*getTokenPrice(ERC20BorrowTokens[i]);
             }
         }
         return maxBorrow/100*calculateTotalDeposit(_user);
@@ -169,7 +171,7 @@ contract sbLending {
     function calculateTotalBorrowed(address _user) public view returns(uint256){
         uint256 totalBorrowed;
         for(uint i; i< ERC20BorrowTokens.length;i++){
-            totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user];
+            totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user]*getTokenPrice(ERC20BorrowTokens[i]);
         }
         return totalBorrowed;
     }
@@ -178,7 +180,7 @@ contract sbLending {
      function calculateTotalDeposit(address _user) public view returns(uint256){
         uint256 totalDeposit;
         for(uint i; i< ERC20DepositTokens.length;i++){
-            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user];
+            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user]*getTokenPrice(ERC20DepositTokens[i]);
         }
         return totalDeposit;
     }
