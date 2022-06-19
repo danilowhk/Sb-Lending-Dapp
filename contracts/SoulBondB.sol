@@ -6,13 +6,17 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract SoulBondB is ERC721 {
 
     address owner;
+    uint public counter;
     constructor() ERC721("SoulBondB","SB-B"){
         owner = msg.sender;
+        mint(owner);
+        
     }
 
-    function mint(address _user, uint tokenId) public {
+    function mint(address _user) public {
         require(owner==msg.sender);
-        _mint(_user, tokenId);
+        _mint(_user, counter);
+        counter+=1;
     }
 
       function transferFrom(

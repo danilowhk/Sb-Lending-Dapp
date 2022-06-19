@@ -1,7 +1,8 @@
 const { expect } = require("chai");
+const { assert } = require("console");
 const { ethers } = require("hardhat");
 
-describe("Greeter", function () {
+describe("sbLending", function () {
 
   before('', async function(){
     const SbLending = await hre.ethers.getContractFactory("sbLending");
@@ -12,27 +13,9 @@ describe("Greeter", function () {
     console.log("sbLending deployed to:", sbLending.address);
 
   });
-  it("Should Deposit Balance for WETH", async function () {
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
-  });
-  it("Should Withdraw Balance for WETH", async function () {
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
-  });
-  it("Should Borrow Balance for WETH", async function () {
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
-  });
-
-  it("Should Payback Balance for WETH", async function () {
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
-  });
-
-  it("Should Liquidate WETH", async function () {
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  it("userMaxBorrowingPower Test", async function () {
+    const userMaxBorrowingPower = await sbLending.calculateMaxBorrow('0xd770134156f9aB742fDB4561A684187f733A9586');
+    assert(userMaxBorrowingPower>0);
   });
 
 

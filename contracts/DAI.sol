@@ -14,7 +14,7 @@ contract DaiToken is ERC20 {
     }
 
     function mint(uint256 _value) public {
-        require(msg.sender == owner);
+        // require(msg.sender == owner);
         _mint(msg.sender,_value);
     }
 }
