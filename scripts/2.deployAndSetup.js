@@ -18,6 +18,8 @@ async function main() {
   //Ethereum Mainnet Oracles
   const WETHOracleAddress = '0x986b5E1e1755e3C2440e960477f25201B0a8bbD4';
   const SBLOracleAddress = '0x547a514d5e3769680Ce22B2361c10Ea13619e8a9';
+  const DaiOracleAddress='0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9';
+  
 
   //Mainnet WETH, DAI, Aave Addres;
   const mainnetWETHAddress='0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
@@ -103,23 +105,27 @@ async function main() {
 
   //Adding Oracles(WETH only)
   await sbLending.addOracle(mainnetWETHAddress,WETHOracleAddress)
+  await sbLending.addOracle(mainnetDaiAddress,DaiOracleAddress)
+
+
+
 
   //Adding Deposit Tokens
   await sbLending.addDepositToken(mainnetWETHAddress);
   await sbLending.addDepositToken(mainnetDaiAddress);
-  await sbLending.addDepositToken(sblToken.address);
+  // await sbLending.addDepositToken(sblToken.address);
 
   //Adding Borrow Tokens
   await sbLending.addBorrowToken(mainnetWETHAddress);
   await sbLending.addBorrowToken(mainnetDaiAddress);
-  await sbLending.addBorrowToken(sblToken.address);
+  // await sbLending.addBorrowToken(sblToken.address);
 
   //Adding Interest Rates
   await sbLending.addTokenInterestFixedInterestRate(mainnetWETHAddress, 7);
   await sbLending.addTokenInterestFixedInterestRate(mainnetDaiAddress, 9);
-  await sbLending.addTokenInterestFixedInterestRate(sblToken.address, 17);
+  // await sbLending.addTokenInterestFixedInterestRate(sblToken.address, 17);
 
-  console.log("Finished!")
+  console.log("Deployments Finished!")
 
 
   

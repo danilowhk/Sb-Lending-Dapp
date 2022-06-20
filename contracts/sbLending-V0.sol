@@ -167,7 +167,12 @@ contract sbLending {
     //Calculate the total amount in $ Borrowed by an user
     function calculateTotalBorrowed(address _user) public view returns(uint256){
         uint256 totalBorrowed;
+        console.log("------Calculate Total Borrow-----");
+        console.log(ERC20BorrowTokens.length);
+        
         for(uint i; i< ERC20BorrowTokens.length;i++){
+            console.log(i);
+            console.log(getLatestPrice(ERC20BorrowTokens[i]));
             totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user]*getLatestPrice(ERC20BorrowTokens[i]);
         }
         return totalBorrowed;
@@ -176,7 +181,16 @@ contract sbLending {
     //Calculate the total amount in $ Deposited by an user
      function calculateTotalDeposit(address _user) public view returns(uint256){
         uint256 totalDeposit;
-        for(uint i; i< ERC20DepositTokens.length;i++){
+        console.log("------Function Calculate Total Deposit Called----");
+        console.log(ERC20DepositTokens.length);
+
+        for(uint i=0; i< ERC20DepositTokens.length;i++){
+
+            console.log("-------Total Deposit Contract Info");
+            console.log(ERC20DepositList[ERC20DepositTokens[i]][_user]);
+            console.log(getLatestPrice(ERC20DepositTokens[i]));
+
+
             totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user]*getLatestPrice(ERC20DepositTokens[i]);
         }
         return totalDeposit;
@@ -187,10 +201,12 @@ contract sbLending {
     //Add a token to be borrowed(should check if token can already be deposited)
     function addBorrowToken(address _token) public {
         require(msg.sender == owner);
+        ERC20BorrowTokens.push(_token);
         allowedBorrowedTokens[_token] = true;
     }
     //Add a token to be deposited
     function addDepositToken(address _token) public {
+        ERC20DepositTokens.push(_token);
         allowedDepositTokens[_token] = true;
     }
 
