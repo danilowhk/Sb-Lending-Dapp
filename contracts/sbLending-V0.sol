@@ -4,9 +4,12 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
+
 contract sbLending {
+    using SafeMath for uint256;
     address[] public soulBondList;
     mapping(address => uint8) public soulBondCategories;
     mapping(uint8 => uint) public categoryPower;
@@ -56,7 +59,7 @@ contract sbLending {
     function borrowERC20(address _token, uint256 _value) public {
         require(IERC20(_token).balanceOf(address(this)) > _value);
         updateAllBalances();
-        // require(calculateTotalBorrowed(msg.sender) + _value < calculateMaxBorrow(msg.sender));
+        require(calculateTotalBorrowed(msg.sender) + _value <= calculateMaxBorrow(msg.sender));
         ERC20BorrowList[_token][msg.sender] += _value;
         IERC20(_token).transfer(msg.sender,_value);
 
@@ -91,15 +94,23 @@ contract sbLending {
   ) external {
       //Validate Liquidation call (can only go up to 50% ratio)
       updateAllBalances();
-      require(calculateTotalBorrowed(user)>calculateMaxBorrow(user));
+    //   require(calculateTotalBorrowed(user)>calculateMaxBorrow(user));
       require(IERC20(debtAsset).allowance(msg.sender,address(this)) > debtToCover);
       ERC20BorrowList[debtAsset][user] -= debtToCover;
       IERC20(debtAsset).transferFrom(msg.sender, address(this), debtToCover);
-      uint totalTransferAmount = debtToCover/getLatestPrice(collateralAsset)*105/100; //5% fee
-      // or uint totalTransferAmount = debtToCover*getLatestPrice[debtAsset]/getLatestPrice[collateralAsset]
-      ERC20DepositList[collateralAsset][user] -= totalTransferAmount;
+    //   console.log(getLatestPrice(collateralAsset));
 
-      IERC20(collateralAsset).transfer(msg.sender, totalTransferAmount);
+        uint256 percentage = uint256(105).div(100);
+        console.log("Liquidita Call!");
+        // console.log(collateralAsset);
+        console.log(getLatestPrice(ERC20BorrowTokens[0]));
+        uint256 debtByPrice = uint256(debtToCover).div(getLatestPrice(ERC20BorrowTokens[0]));
+
+        uint256 totalTransferAmount = debtByPrice.mul(percentage);
+
+      ERC20DepositList[collateralAsset][user] -= uint(totalTransferAmount);
+
+      IERC20(collateralAsset).transfer(msg.sender, uint(totalTransferAmount));
 
 
   }
@@ -117,9 +128,6 @@ contract sbLending {
         return tokenFixedInterestRate[_token];
     }
     //get a fixed price form a token Address
-
-
-
 
 
     //add a SoulBond Token to the List
@@ -228,6 +236,10 @@ contract sbLending {
         return uint256(price);
     }
 
+    function setBaseMaxBorrow(uint _value) public {
+        baseMaxBorrow = _value;
+    }
+
 
     modifier checkBorrowList(address _token){
 
@@ -240,6 +252,8 @@ contract sbLending {
         require(allowedDepositTokens[_token]);
         _;
     }
+
+
 
 
 }

@@ -56,7 +56,7 @@ async function main() {
   console.log(`DaiBalance: ${await DaiContract.balanceOf(metaMaskUserAddress)}`)
   
   //Test Deposits(done)
-  const depositAmount = hre.ethers.utils.parseEther('10');
+  const depositAmount = hre.ethers.utils.parseEther('101');
   console.log("----------Before Tx!");
   await sbLendingContract.depositERC20(WETHAddress,depositAmount,{gasLimit: 300000});
   await sbLendingContract.depositERC20(DaiAddress,depositAmount,{gasLimit: 300000});
@@ -68,7 +68,7 @@ async function main() {
   console.log(`Current Dai Deposit Balance: ${DAIdepositBalance}`);
 
   //Test Withdraw(done)
-  const withdrawAmount = hre.ethers.utils.parseEther('3');
+  const withdrawAmount = hre.ethers.utils.parseEther('1');
   await sbLendingContract.withdrawERC20(WETHAddress,withdrawAmount,{gasLimit: 300000});
   await sbLendingContract.depositERC20(DaiAddress,withdrawAmount,{gasLimit: 300000});
 
@@ -89,36 +89,56 @@ async function main() {
 
   //2. Test function calculateTotalDeposit(address _user)
   const totalDeposited= await sbLendingContract.calculateTotalDeposit(metaMaskUserAddress);
-  console.log(`Total Deposited: ${totalDeposited}`);
+  console.log(`${totalDeposited} -- Total Deposited`);
 
 
   //3. Test function calculateMaxBorrow(address _user)
-  const maxBorrow = await sbLendingContract.calculateMaxBorrow(metaMaskUserAddress);
-  console.log(`Max Borrow ${maxBorrow}`);
+  const maxBorrow = hre.ethers.utils.parseEther('80')
+  console.log(`${maxBorrow} Max-Borrow`);
 
 
 
   //4. Test borrowERC20(address _token, uint256 _value) and check ERC20BorrowList[_token][_userAddress] balance
 
-
-  const borrowAmount = hre.ethers.utils.parseEther('15');
-  await sbLendingContract.borrowERC20(WETHAddress,borrowAmount,{gasLimit: 300000});
+  // const borrowAmount = await sbLendingContract.calculateMaxBorrow(metaMaskUserAddress);
+  // const borrowAmount = hre.ethers.utils.parseEther('15');
+  await sbLendingContract.borrowERC20(WETHAddress,maxBorrow,{gasLimit: 300000});
   const WETHborrowBalance = await sbLendingContract.ERC20BorrowList(WETHAddress,metaMaskUserAddress);
   console.log(`Current WETH Borrow Balance Before Payback: ${WETHborrowBalance}`);
 
+  
 
-  //Test PayBack
+
+  //Test PayBack(ok)
   //1.Test payBackERC20(address _token, uint256 _value)
-  const payBackAmount = hre.ethers.utils.parseEther('5');
-  await sbLendingContract.payBackERC20(WETHAddress,payBackAmount,{gasLimit: 300000});
-  const WETHborrowBalance2 = await sbLendingContract.ERC20BorrowList(WETHAddress,metaMaskUserAddress);
-  console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
+  // const payBackAmount = hre.ethers.utils.parseEther('5');
+  // await sbLendingContract.payBackERC20(WETHAddress,payBackAmount,{gasLimit: 300000});
+  // const WETHborrowBalance2 = await sbLendingContract.ERC20BorrowList(WETHAddress,metaMaskUserAddress);
+  // console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
 
-  //2. Check if ERC20BorrowList[_token][_userAddress] have changed
+  //2. Check if ERC20BorrowList[_token][_userAddress] have changed(done)
 
   //Test Liquidate
-  //1.Test  function liquidationCall( address collateralAsset, address debtAsset, address user, uint256 debtToCover)
-  // await sbLendingContract.liquidationCall(WETHAddress,payBackAmount,{gasLimit: 300000});
+  // 1.Test  function liquidationCall( address collateralAsset, address debtAsset, address user, uint256 debtToCover)
+  await sbLendingContract.setBaseMaxBorrow(30);
+  const newMaxBorrowRate = await sbLendingContract.baseMaxBorrow();
+  const payBackAmount = hre.ethers.utils.parseEther('10');
+  console.log(`New Max Borrow Rate: ${newMaxBorrowRate}`);
+  const WETHborrowBeforeLiquidation = await sbLendingContract.ERC20BorrowList(WETHAddress,metaMaskUserAddress);
+  const WETHdepositBeforeLiquidation = await sbLendingContract.ERC20DepositList(WETHAddress,metaMaskUserAddress);
+  await sbLendingContract.liquidationCall(WETHAddress,WETHAddress,metaMaskUserAddress,payBackAmount,{gasLimit: 300000});
+  const WETHborrowAfterLiquidation = await sbLendingContract.ERC20BorrowList(WETHAddress,metaMaskUserAddress);
+  const WETHdepositAfterLiquidation = await sbLendingContract.ERC20DepositList(WETHAddress,metaMaskUserAddress);
+
+  console.log(`Borrow Before Liquidation ${WETHborrowBeforeLiquidation}`);
+  console.log(`Borrow After Liquidation ${WETHborrowAfterLiquidation}`);
+  console.log(`Deposit Before Liquidation ${WETHdepositBeforeLiquidation}`);
+  console.log(`Deposit After Liquidation -${WETHdepositAfterLiquidation}`);
+
+
+
+
+
 
   //2.Test LiquidateCall due to price Movement
   

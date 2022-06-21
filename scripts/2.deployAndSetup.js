@@ -10,8 +10,6 @@ const sbLendingArtifact = require('../sb-lending/src/contracts/contracts/sbLendi
 
 
 
-
-
 async function main() {
 
 
@@ -22,8 +20,8 @@ async function main() {
   
 
   //Mainnet WETH, DAI, Aave Addres;
-  const mainnetWETHAddress='0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
-  const mainnetDaiAddress='0x6B175474E89094C44Da98b954EedeAC495271d0F';
+  const mainnetWETHAddress='0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89';
+  const mainnetDaiAddress='0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589';
   const mainnetAaveAddress='';
   const metaMaskUserAddress='0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8';
 
