@@ -26,6 +26,7 @@ contract sbLending {
     address[] public ERC20DepositTokens;
 
     uint256 public baseMaxBorrow = 70;
+    uint8 public constant decimals = 18;
 
     //For this contract we are using fixed interest Rate and Fixed Prices for feature test purposes
 
@@ -225,7 +226,9 @@ contract sbLending {
             /*uint timeStamp*/,
             /*uint80 answeredInRound*/
         ) = AggregatorV3Interface(ERC20Oracles[_token]).latestRoundData();
-        return uint256(price);
+        uint8 _decimals = AggregatorV3Interface(ERC20Oracles[_token]).decimals();
+
+        return uint256(price) * (10 ** (decimals - _decimals));
     }
 
     function setBaseMaxBorrow(uint _value) public {
@@ -244,12 +247,4 @@ contract sbLending {
         require(allowedDepositTokens[_token]);
         _;
     }
-
-
-
-
 }
-
-
-
-
