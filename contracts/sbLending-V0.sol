@@ -100,17 +100,16 @@ contract sbLending {
       IERC20(debtAsset).transferFrom(msg.sender, address(this), debtToCover);
     //   console.log(getLatestPrice(collateralAsset));
 
-        uint256 percentage = uint256(105).div(100);
-        console.log("Liquidita Call!");
         // console.log(collateralAsset);
-        console.log(getLatestPrice(ERC20BorrowTokens[0]));
-        uint256 debtByPrice = uint256(debtToCover).div(getLatestPrice(ERC20BorrowTokens[0]));
+        // uint256 debtByPrice = uint256(debtToCover).div(getLatestPrice(ERC20BorrowTokens[0]));
+        uint256 debtByPrice = uint256(debtToCover);
 
-        uint256 totalTransferAmount = debtByPrice.mul(percentage);
+        uint256 totalTransferAmount = (debtByPrice.mul(105)).div(100);
+        //Needs to Check Price for cross Assets Liquidation;
 
-      ERC20DepositList[collateralAsset][user] -= uint(totalTransferAmount);
+      ERC20DepositList[collateralAsset][user] -= totalTransferAmount;
 
-      IERC20(collateralAsset).transfer(msg.sender, uint(totalTransferAmount));
+      IERC20(collateralAsset).transfer(msg.sender, totalTransferAmount);
 
 
   }
@@ -163,23 +162,21 @@ contract sbLending {
     function calculateMaxBorrow(address _user) public view returns(uint256) {
         uint256 maxBorrow = baseMaxBorrow; 
         for(uint i; i < soulBondList.length ; i++){
-            uint amount = IERC721(soulBondList[i]).balanceOf(_user);
+            uint amount = (IERC721(soulBondList[i]).balanceOf(_user)).div(1 ether);
             if(IERC721(soulBondList[i]).balanceOf(_user)>0){
                 maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]]*amount;
             }
         }
-        return maxBorrow*calculateTotalDeposit(_user)/100;
+        return (maxBorrow*calculateTotalDeposit(_user)).div(100);
         // return (maxBorrow);
 
     }
     //Calculate the total amount in $ Borrowed by an user
     function calculateTotalBorrowed(address _user) public view returns(uint256){
         uint256 totalBorrowed;
-        console.log("------Calculate Total Borrow-----");
-        console.log(ERC20BorrowTokens.length);
-        
+
         for(uint i; i< ERC20BorrowTokens.length;i++){
-            console.log(i);
+            console.log("Chain Link Price");
             console.log(getLatestPrice(ERC20BorrowTokens[i]));
             totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user]*getLatestPrice(ERC20BorrowTokens[i]);
         }
@@ -189,17 +186,12 @@ contract sbLending {
     //Calculate the total amount in $ Deposited by an user
      function calculateTotalDeposit(address _user) public view returns(uint256){
         uint256 totalDeposit;
-        console.log("------Function Calculate Total Deposit Called----");
-        console.log(ERC20DepositTokens.length);
+
 
         for(uint i=0; i< ERC20DepositTokens.length;i++){
 
-            console.log("-------Total Deposit Contract Info");
-            console.log(ERC20DepositList[ERC20DepositTokens[i]][_user]);
-            console.log(getLatestPrice(ERC20DepositTokens[i]));
-
-
             totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user]*getLatestPrice(ERC20DepositTokens[i]);
+
         }
         return totalDeposit;
     }

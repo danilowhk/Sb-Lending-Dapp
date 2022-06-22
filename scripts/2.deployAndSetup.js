@@ -9,8 +9,15 @@ const WETHArtifact = require('../sb-lending/src/contracts/contracts/WETH.sol/WET
 const sbLendingArtifact = require('../sb-lending/src/contracts/contracts/sbLending-V0.sol/sbLending.json')
 
 
+let sbLending;
+let wethToken;
+let daiToken;
+let sblToken;
 
-async function main() {
+
+
+
+async function deployAndSetup() {
 
 
   //Ethereum Mainnet Oracles
@@ -31,25 +38,28 @@ async function main() {
   const AaveAbi= '';
 
   const SbLending = await hre.ethers.getContractFactory("sbLending");
-  const sbLending = await SbLending.deploy();
+  sbLending = await SbLending.deploy();
   await sbLending.deployed();
-  console.log(`sbLending Address: ${sbLending.address}`)
+  // console.log(`sbLending Address: ${sbLending.address}`)
+  // console.log(`sbLending Signer: ${sbLending.signer.address}`);
+
 
 
   //-----------ERC20 Tokens and SBL Token Deployment
   const DaiToken = await hre.ethers.getContractFactory("DaiToken");
-  const daiToken = await DaiToken.deploy();
+  daiToken = await DaiToken.deploy();
   await daiToken.deployed();
-  console.log(`daiToken Address: ${daiToken.address}`)
+  // console.log(`daiToken Address: ${daiToken}`)
+  // console.log(daiToken);
 
   const WETHToken = await hre.ethers.getContractFactory("WETHToken");
-  const wethToken = await WETHToken.deploy();
+  wethToken = await WETHToken.deploy();
   await wethToken.deployed();
   console.log(`WETHToken Address: ${wethToken.address}`)
 
 
   const SblToken = await hre.ethers.getContractFactory("SblToken");
-  const sblToken = await SblToken.deploy();
+  sblToken = await SblToken.deploy();
   await sblToken.deployed();
   console.log(`SBLToken Address: ${sblToken.address}`)
 
@@ -86,12 +96,6 @@ async function main() {
   console.log(`SB-D Address: ${soulBondD.address}`)
 
 
-  
-  //getting user Address
-  const userAddress = SoulBondS.signer.address;
-  console.log(`Deployer Address: ${userAddress}`);
-
-
   //adding SoulBondTokens
   await sbLending.addSoulBondToken(soulBondS.address, 1,7);
   await sbLending.addSoulBondToken(soulBondA.address, 2,5);
@@ -125,12 +129,29 @@ async function main() {
 
   console.log("Deployments Finished!")
 
+  //mint ERC20s
+
+  await WETHContract.mint(approveAmount);
+  await DaiContract.mint(approveAmount);
+  console.log(`WETHBalance: ${await WETHContract.balanceOf(metaMaskUserAddress)}`)
+  console.log(`DaiBalance: ${await DaiContract.balanceOf(metaMaskUserAddress)}`)
+
+  //mint SoulbBonds
+
+
 
   
 }
 
+exports.deployAndSetup = deployAndSetup;
+exports.sbLending=sbLending;
+exports.wethToken=wethToken;
+exports.daiToken=daiToken;
+exports.sblToken=sblToken;
 
-main()
+
+
+deployAndSetup()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
