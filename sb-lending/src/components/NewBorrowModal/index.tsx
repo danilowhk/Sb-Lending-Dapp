@@ -4,6 +4,7 @@ import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 import { FormEvent, useState } from 'react';
+import { ethers } from 'ethers';
 
 
 interface NewBorrowModalProps{
@@ -12,46 +13,60 @@ interface NewBorrowModalProps{
     contract: string;
     provider: any;
     signer: any;
+    ERC20Abi: any;
+    sbLendingAbi: any;
 }
 
-export function NewBorrowModal({ isOpen, onRequestClose,contract , provider, signer} : NewBorrowModalProps) {
-    // const {createTransaction} = useTransactions();
+export function NewBorrowModal({ isOpen, onRequestClose,contract , provider, signer,ERC20Abi,sbLendingAbi} : NewBorrowModalProps) {
 
     const [type, setType] = useState('borrow');
     const [amount,setAmount] = useState(0);
+
+    const SbLendingAddress='0xAF451392f7524CF76240FD886C924A5041b8fb6d';
+    const WETHAddress='0x7B99CBF7300B1208B64Fa648435d26b2116991e8';
+    const DAIAddress='0x8a8c52A98a67f8e762482B6B17B9a17fcEe46352';
+    const SBLAddress='0xc2C2A117B4f9fd7d73FB7695E075216dC0348FBC';
+    let sbLendingContract:any;
+   
+
+    if(signer){
+        sbLendingContract = new ethers.Contract(SbLendingAddress,sbLendingAbi,signer);
+    }
+
 
 
 
     async function handleSubmit(event: FormEvent){
         event.preventDefault();
+
+        const userAddress = await signer.getAddress();
+
         if(contract === "WETH"){
             if(type=='borrow'){
-                console.log("Borrow WETH")
-                console.log(amount)
-                console.log(provider)
-                console.log(signer)
+                const WETHBorrowTx = await sbLendingContract.borrowERC20(WETHAddress,amount);
+                await WETHBorrowTx.wait();
             } else{
-                console.log("PayBack WETH")
-                console.log(amount)
+                const WETHPayBackTx = await sbLendingContract.payBackERC20(WETHAddress,amount);
+                await WETHPayBackTx.wait();
             }
 
         }
         if(contract === "DAI"){
             if(type=='borrow'){
-                console.log("Borrow DAI")
-                console.log(amount)
+                const DaiBorrowTx = await sbLendingContract.borrowERC20(DAIAddress,amount);
+                await DaiBorrowTx.wait();
             } else{
-                console.log("PayBack DAI")
-                console.log(amount)
+                const DaiPayBackTx = await sbLendingContract.payBackERC20(DAIAddress,amount);
+                await DaiPayBackTx.wait();
             }
         }
         if(contract === "SBL"){
             if(type=='borrow'){
-                console.log("Borrow SBL")
-                console.log(amount)
+                const SBLBorrowTx = await sbLendingContract.borrowERC20(SBLAddress,amount);
+                await SBLBorrowTx.wait();
             } else{
-                console.log("PayBack SBL")
-                console.log(amount)
+                const SBLPayBackTx = await sbLendingContract.payBackERC20(SBLAddress,amount);
+                await SBLPayBackTx.wait();
             }
         }
 

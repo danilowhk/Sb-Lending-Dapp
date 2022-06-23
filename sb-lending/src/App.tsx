@@ -8,6 +8,7 @@ import {ethers} from 'ethers';
 import sbLendingArtifact from './contracts/contracts/sbLending-V0.sol/sbLending.json';
 import WETHArtifact from './contracts/contracts/WETH.sol/WETHToken.json';
 import SoulBondSArtifact from './contracts/contracts/SoulBondS.sol/SoulBondS.json';
+import { BigNumber } from 'ethers';
 
 
 
@@ -40,13 +41,38 @@ function App() {
   const [SBLContract, setSBLContract] = useState<any>();
   const [SbLendingContract, setSbLendingContract] = useState<any>();
 
+  //Balances States;
+  const [WETHData, setWETHData] = useState<any>({
+    name: 'WETH',
+    price: 0 ,
+    depositBalance: 0,
+    borrowBalance: 0,
+  });
+  const [DaiData, setDaiData] = useState<any>({
+      name: 'Dai',
+      price: 0 ,
+      depositBalance: 0,
+      borrowBalance: 0
+  });
+  const [SBLData, setSBLData] = useState<any>({
+      name: 'SBL',
+      price: 0 ,
+      depositBalance: 0,
+      borrowBalance: 0,
+  });  
 
-  //lending Pool Address
-  const SbLendingAddress='0xd53890360fFB710c3565c37CEE129Eb0Da8C1e96';
-  //ERC20 Tokens Address
-  const WETHAddress='0x8662e360188d612685362A35770f4A0657089ce0';
-  const daiAddress='0xC38b6D54635327516B9aEa23664afca2a86c464a';
-  const SBLAddress='0x5dd36E5c3d054C0c8D7a126bF67B7868f8537F1B';
+  const [totalDepositBalance,setTotalDepositBalance]=useState<any>(0);
+  const [totalBorrowBalance,setTotalBorrowBalance]=useState<any>(0);
+  const [currentHealthFactor,setCurrentHealthFactor] = useState<any>(0);
+  const [maxCollateralFactor,setMaxCollateralFactor] = useState<any>(70);
+
+  //Lending Pool and ERC20 Tokens Contracts
+  const SbLendingAddress='0xAF451392f7524CF76240FD886C924A5041b8fb6d';
+  const WETHAddress='0x7B99CBF7300B1208B64Fa648435d26b2116991e8';
+  const DAIAddress='0x8a8c52A98a67f8e762482B6B17B9a17fcEe46352';
+  const SBLAddress='0xc2C2A117B4f9fd7d73FB7695E075216dC0348FBC';
+
+
   //SoulBond Tokens Address
   const soulBondSAddress='0x7228f2c0f1E7948024056e1bc1CC310850f46432';
   const soulBondAAddress='0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174';
@@ -54,10 +80,8 @@ function App() {
   const soulBondCAddress='0x46F411c24ffF4338Fb1f09a026Da1a3F3b764Ec5';
   const soulBondDAddress='0x43b2EeD08547671220749bFE390fF45516c49134';
 
-
-
-
-
+  const ERC20Abi = WETHArtifact.abi;
+  const sbLendingAbi = sbLendingArtifact.abi;
 
 
  async function connectWallet(){
@@ -69,34 +93,77 @@ function App() {
         setSigner(signer);
         setProvider(provider);
         setIsConnected(true);
+        getPoolsData();
     } else {
     }
   }
 
-  async function depositERC20(){
-    const contract = new ethers.Contract(SbLendingAddress,sbLendingArtifact.abi,signer);
+  async function getPoolsData(){
+        
+    if(signer){
+        const sbLending = new ethers.Contract(SbLendingAddress,sbLendingArtifact.abi,signer);
+        const userAddress = await signer.getAddress();
 
-  }
+        const WETHPrice =(await sbLending.getLatestPrice(WETHAddress)).toString();
+        const DaiPrice = (await sbLending.getLatestPrice(DAIAddress)).toString();
+        const SblPrice = (await sbLending.getLatestPrice(SBLAddress)).toString();
 
-  function withdrawERC20(){
+        const WETHDepositBalance =(await sbLending.ERC20DepositList(WETHAddress,userAddress)).toString();
+        const DaiDepositBalance = (await sbLending.ERC20DepositList(DAIAddress,userAddress)).toString();
+        const SblDepositBalance = (await sbLending.ERC20DepositList(SBLAddress,userAddress)).toString();
 
-  }
+        const WETHBorrowBalance = (await sbLending.ERC20BorrowList(WETHAddress,userAddress)).toString();
+        const DaiBorrowBalance = (await sbLending.ERC20BorrowList(DAIAddress,userAddress)).toString();
+        const SblBorrowBalance = (await sbLending.ERC20BorrowList(SBLAddress,userAddress)).toString();
 
-  function borrowERC20(){
+        const totalDepositBalanceData = (await sbLending.calculateTotalDeposit(userAddress)).toString();
+        const totalBorrowBalanceData = (await sbLending.calculateTotalBorrowed(userAddress)).toString();
+        const maxCollateralPercentage = (await sbLending.calculateMaxBorrowPercentage(userAddress)).toString();
 
-  }
-
-  function paybackERC20(){
-
-  }
-  
-
-  function liquidateERC20(){
-
-  }
+        // let currentHealthFactor =0;
+        // if(totalDepositBalanceData != 0){
+        //    currentHealthFactor = totalBorrowBalanceData/totalDepositBalanceData;
+        // }
 
 
+        setTotalDepositBalance(totalDepositBalanceData);
+        setTotalBorrowBalance(totalBorrowBalanceData);
+        setCurrentHealthFactor(currentHealthFactor);
+        setMaxCollateralFactor(maxCollateralPercentage);
 
+
+        console.log(`WETH Deposit Balance: ${WETHDepositBalance}`)
+        console.log(`Dai Deposit Balance: ${DaiDepositBalance}`)
+        console.log(`SBL Deposit Balance: ${SblDepositBalance}`)
+
+
+        setWETHData({
+            name:WETHData.name,
+            depositBalance:WETHDepositBalance,
+            price: WETHPrice,
+            borrowBalance: WETHBorrowBalance
+        })
+
+        setDaiData({
+            name:DaiData.name,
+            depositBalance:DaiDepositBalance,
+            price: DaiPrice,
+            borrowBalance: DaiBorrowBalance
+        })
+
+        setSBLData({
+            name:SBLData.name,
+            depositBalance:SblDepositBalance,
+            price: SblPrice,
+            borrowBalance: SblBorrowBalance
+        })
+
+
+    }
+   
+}
+
+ 
 
   function handleOpenDepositModal(contract:any){
     setIsDepositModal(true);
@@ -116,7 +183,9 @@ function App() {
     setIsBorrowModal(false);
   }
   useEffect(()=>{
-  },[]);
+    getPoolsData();
+
+  },);
 
   return (
     <>
@@ -130,6 +199,14 @@ function App() {
         onOpenBorrowModal={handleOpenBorrowModal}
         provider={provider}
         signer={signer}
+        WETHData={WETHData}
+        DaiData={DaiData}
+        SBLData={SBLData}
+        totalDepositBalance={totalDepositBalance}
+        totalBorrowBalance={totalBorrowBalance}
+        maxCollateralFactor={maxCollateralFactor}
+        currentHealthFactor={currentHealthFactor}
+
       />
       <NewDepositModal
         isOpen={isDepositModal}
@@ -137,6 +214,9 @@ function App() {
         contract={contract}
         provider={provider}
         signer={signer}
+        ERC20Abi={ERC20Abi}
+        sbLendingAbi={sbLendingAbi}
+
       />
       <NewBorrowModal
         isOpen={isBorrowModal}
@@ -144,6 +224,8 @@ function App() {
         contract={contract}
         provider={provider}
         signer={signer}
+        ERC20Abi={ERC20Abi}
+        sbLendingAbi={sbLendingAbi}
       />
       <GlobalStyle />
     </>

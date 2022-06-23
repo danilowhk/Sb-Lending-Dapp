@@ -16,8 +16,8 @@ contract sbLending {
 
     mapping(address => address) public ERC20Oracles;
     mapping(address => address) public tokenToOracleToken;
-    mapping(address => mapping(address => uint256)) public ERC20BorrowList; //address => token => balance
-    mapping(address => mapping(address => uint256)) public ERC20DepositList; //address => Token => balance
+    mapping(address => mapping(address => uint256)) public ERC20BorrowList; //Token => Address => balance
+    mapping(address => mapping(address => uint256)) public ERC20DepositList; //token => Address => balance
     mapping(address => bool) public allowedBorrowedTokens;
     mapping(address => bool) public allowedDepositTokens;
     mapping(address => mapping(address => uint256)) public userLastTokenUpdate;
@@ -27,6 +27,7 @@ contract sbLending {
 
     uint256 public baseMaxBorrow = 70;
     uint8 public constant decimals = 18;
+
 
     //For this contract we are using fixed interest Rate and Fixed Prices for feature test purposes
 
@@ -147,8 +148,13 @@ contract sbLending {
         uint256 lastUpdate = userLastTokenUpdate[msg.sender][_token];
         userLastTokenUpdate[msg.sender][_token] = block.timestamp;
         //calculating interest value to be added
-        uint256 value = (block.timestamp - lastUpdate)*tokenFixedInterestRate[_token];
-        ERC20DepositList[_token][msg.sender] += value;
+        uint256 timeInYear=(block.timestamp - lastUpdate).div(365 days);
+        uint256 depositValue = timeInYear*tokenFixedInterestRate[_token]*ERC20DepositList[_token][msg.sender];
+        uint256 borrowValue = timeInYear*(tokenFixedInterestRate[_token]+2)*ERC20DepositList[_token][msg.sender];
+
+        ERC20DepositList[_token][msg.sender] += depositValue;
+        ERC20BorrowList[_token][msg.sender] += depositValue;
+
     }
     //update the balance of all the tokens;
     function updateAllBalances() public {
@@ -161,15 +167,22 @@ contract sbLending {
   
     //Calculate the Max amount an Address can Borrow
     function calculateMaxBorrow(address _user) public view returns(uint256) {
+        uint256 maxBorrowPercentage = calculateMaxBorrowPercentage(_user); 
+       
+        return (maxBorrowPercentage*calculateTotalDeposit(_user)).div(100);
+
+    }
+
+    function calculateMaxBorrowPercentage(address _user) public view returns(uint256) {
         uint256 maxBorrow = baseMaxBorrow; 
         for(uint i; i < soulBondList.length ; i++){
-            uint amount = (IERC721(soulBondList[i]).balanceOf(_user)).div(1 ether);
+ 
+            uint amount = (IERC721(soulBondList[i]).balanceOf(_user));
             if(IERC721(soulBondList[i]).balanceOf(_user)>0){
                 maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]]*amount;
             }
         }
-        return (maxBorrow*calculateTotalDeposit(_user)).div(100);
-        // return (maxBorrow);
+        return maxBorrow;
 
     }
     //Calculate the total amount in $ Borrowed by an user
@@ -177,9 +190,9 @@ contract sbLending {
         uint256 totalBorrowed;
 
         for(uint i; i< ERC20BorrowTokens.length;i++){
-            console.log("Chain Link Price");
-            console.log(getLatestPrice(ERC20BorrowTokens[i]));
+
             totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user]*getLatestPrice(ERC20BorrowTokens[i]);
+
         }
         return totalBorrowed;
     }
@@ -228,7 +241,8 @@ contract sbLending {
         ) = AggregatorV3Interface(ERC20Oracles[_token]).latestRoundData();
         uint8 _decimals = AggregatorV3Interface(ERC20Oracles[_token]).decimals();
 
-        return uint256(price) * (10 ** (decimals - _decimals));
+        return uint256(price).mul(10**(decimals - _decimals));
+  
     }
 
     function setBaseMaxBorrow(uint _value) public {
@@ -247,4 +261,12 @@ contract sbLending {
         require(allowedDepositTokens[_token]);
         _;
     }
+
+
+
+
 }
+
+
+
+

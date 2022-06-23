@@ -50,10 +50,7 @@ async function main() {
 
   //mint ERC20
 
-  await WETHContract.mint(approveAmount);
-  await DaiContract.mint(approveAmount);
-  console.log(`WETHBalance: ${await WETHContract.balanceOf(metaMaskUserAddress)}`)
-  console.log(`DaiBalance: ${await DaiContract.balanceOf(metaMaskUserAddress)}`)
+ 
   
   //Test Deposits(done)
   const depositAmount = hre.ethers.utils.parseEther('101');

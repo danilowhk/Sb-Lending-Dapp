@@ -17,7 +17,7 @@ let sblToken;
 
 
 
-async function deployAndSetup() {
+async function main() {
 
 
   //Ethereum Mainnet Oracles
@@ -40,8 +40,8 @@ async function deployAndSetup() {
   const SbLending = await hre.ethers.getContractFactory("sbLending");
   sbLending = await SbLending.deploy();
   await sbLending.deployed();
-  // console.log(`sbLending Address: ${sbLending.address}`)
-  // console.log(`sbLending Signer: ${sbLending.signer.address}`);
+  console.log(`sbLending Address: ${sbLending.address}`)
+  console.log(`sbLending Signer: ${sbLending.signer.address}`);
 
 
 
@@ -49,8 +49,7 @@ async function deployAndSetup() {
   const DaiToken = await hre.ethers.getContractFactory("DaiToken");
   daiToken = await DaiToken.deploy();
   await daiToken.deployed();
-  // console.log(`daiToken Address: ${daiToken}`)
-  // console.log(daiToken);
+  console.log(`daiToken Address: ${daiToken}`)
 
   const WETHToken = await hre.ethers.getContractFactory("WETHToken");
   wethToken = await WETHToken.deploy();
@@ -130,11 +129,11 @@ async function deployAndSetup() {
   console.log("Deployments Finished!")
 
   //mint ERC20s
-
-  await WETHContract.mint(approveAmount);
-  await DaiContract.mint(approveAmount);
-  console.log(`WETHBalance: ${await WETHContract.balanceOf(metaMaskUserAddress)}`)
-  console.log(`DaiBalance: ${await DaiContract.balanceOf(metaMaskUserAddress)}`)
+  let approveAmount= hre.ethers.utils.parseEther('10000');
+  await wethToken.mint(approveAmount);
+  await daiToken.mint(approveAmount);
+  console.log(`WETHBalance: ${await wethToken.balanceOf(metaMaskUserAddress)}`)
+  console.log(`DaiBalance: ${await daiToken.balanceOf(metaMaskUserAddress)}`)
 
   //mint SoulbBonds
 
@@ -143,15 +142,10 @@ async function deployAndSetup() {
   
 }
 
-exports.deployAndSetup = deployAndSetup;
-exports.sbLending=sbLending;
-exports.wethToken=wethToken;
-exports.daiToken=daiToken;
-exports.sblToken=sblToken;
 
 
 
-deployAndSetup()
+main()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);

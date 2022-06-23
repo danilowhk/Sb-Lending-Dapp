@@ -1,8 +1,6 @@
 const { expect } = require("chai");
 const { assert } = require("console");
 const { ethers } = require("hardhat");
-const { transferFunds } = require("../scripts/1.transferFundsFork");
-
 
 describe("sbLending", function () {
 
@@ -12,16 +10,31 @@ describe("sbLending", function () {
   let wethToken;
   let daiToken;
   let sblToken;
+  let soulBondS;
 
   before('', async function(){
-    transferFunds();
+    metaMaskUserAddress='0xd770134156f9aB742fDB4561A684187f733A9586';
+    const ETHWhale = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8';
+
+    //Impersonate Whale
+    await hre.network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [ETHWhale],
+    });
+
+    const ETHsigner = await hre.ethers.getSigner(ETHWhale);
+ 
+      //send ETH
+      await ETHsigner.sendTransaction({
+        to: metaMaskUserAddress,
+        value: hre.ethers.utils.parseEther("2000") // 1000 ether
+      })
 
     //Ethereum Mainnet Oracles
-    const WETHOracleAddress = '0x986b5E1e1755e3C2440e960477f25201B0a8bbD4';
+    const WETHOracleAddress = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
     const SBLOracleAddress = '0x547a514d5e3769680Ce22B2361c10Ea13619e8a9';
     const DaiOracleAddress='0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9';
     //Address to be used in Metamask
-    metaMaskUserAddress='0xd770134156f9aB742fDB4561A684187f733A9586';
     await hre.network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [metaMaskUserAddress],
@@ -52,7 +65,7 @@ describe("sbLending", function () {
 
     //Deploying SoulBond Tokens
     const SoulBondS = await hre.ethers.getContractFactory("SoulBondS",metaMaskSigner);
-    const soulBondS = await SoulBondS.deploy();
+    soulBondS = await SoulBondS.deploy();
     await soulBondS.deployed();
     console.log(`SB-S Address: ${soulBondS.address}`)
   
@@ -177,12 +190,17 @@ describe("sbLending", function () {
     console.log(`Current Dai Deposit Balance After Withdraw: ${DAIdepositBalance2}`);
     console.log(`Current Dai Deposit Balance After Withdraw: ${SBLdepositBalance2}`);
 
-    assert(SBLdepositBalance2>50&&DAIdepositBalance2>50&&SBLdepositBalance2>50);
+    assert(SBLdepositBalance2>50 && DAIdepositBalance2>50 && SBLdepositBalance2>50);
     
   });
   //Correct Math on Contract
   it("Test Function calculateMaxBorrow(address _user)", async function () {
+    const totalDeposit = hre.ethers.utils.formatEther(await sbLending.calculateTotalDeposit(metaMaskUserAddress));
     const maxBorrow= hre.ethers.utils.formatEther(await sbLending.calculateMaxBorrow(metaMaskUserAddress));
+    const balanceSBS= await soulBondS.balanceOf(metaMaskUserAddress);
+
+    console.log(`SBS Balance: ${balanceSBS}`);
+    console.log(`Total Deposit: ${totalDeposit}`);
     console.log(`Max Borrow: ${maxBorrow}`);
 
     assert(maxBorrow>0 && maxBorrow<50);
@@ -239,7 +257,7 @@ describe("sbLending", function () {
     console.log(`Deposit Before Liquidation ${WETHdepositBeforeLiquidation}`);
     console.log(`Deposit After Liquidation ${WETHdepositAfterLiquidation}`);
 
-    assert(WETHdepositAfterLiquidation<WETHdepositBeforeLiquidation && WETHborrowBeforeLiquidation<WETHborrowAfterLiquidation); 
+    assert(WETHdepositAfterLiquidation<WETHdepositBeforeLiquidation && WETHborrowBeforeLiquidation<WETHborrowAfterLiquidation);
   
 
   });

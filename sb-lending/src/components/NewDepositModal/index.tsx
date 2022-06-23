@@ -4,6 +4,7 @@ import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 import { FormEvent, useState } from 'react';
+import {ethers} from 'ethers';
 
 
 interface NewDepositModalProps{
@@ -12,43 +13,62 @@ interface NewDepositModalProps{
     contract: string;
     provider: any;
     signer: any;
+    ERC20Abi: any;
+    sbLendingAbi: any;
 }
 
-export function NewDepositModal({ isOpen, onRequestClose,contract, provider, signer} : NewDepositModalProps) {
+export function NewDepositModal({ isOpen, onRequestClose,contract, provider, signer,ERC20Abi,sbLendingAbi} : NewDepositModalProps) {
     // const {createTransaction} = useTransactions();
 
     const [type, setType] = useState('deposit');
     const [amount,setAmount] = useState(0);
 
+    const SbLendingAddress='0xAF451392f7524CF76240FD886C924A5041b8fb6d';
+    const WETHAddress='0x7B99CBF7300B1208B64Fa648435d26b2116991e8';
+    const DAIAddress='0x8a8c52A98a67f8e762482B6B17B9a17fcEe46352';
+    const SBLAddress='0xc2C2A117B4f9fd7d73FB7695E075216dC0348FBC';
+    let sbLendingContract:any;
+
+
+    if(signer){
+        sbLendingContract = new ethers.Contract(SbLendingAddress,sbLendingAbi,signer);
+    }
+
 
 
     async function handleSubmit(event: FormEvent){
         event.preventDefault();
+
+        // const userAddress = await signer.getAddress();
+
         if(contract === "WETH"){
             if(type=='deposit'){
-                console.log("Deposit WETH")
-                console.log(amount)
+        
+                const WETHDepositTx = await sbLendingContract.depositERC20(WETHAddress,amount);
+                await WETHDepositTx.wait();
+
+
             } else{
-                console.log("Withdraw WETH")
-                console.log(amount)
+                const WETHWithdrawTx = await sbLendingContract.withdrawERC20(WETHAddress,amount);
+                await WETHWithdrawTx.wait();
             }
         }
         if(contract === "DAI"){
             if(type=='deposit'){
-                console.log("Deposit WETH")
-                console.log(amount)
+                const DaiDepositTx = await sbLendingContract.depositERC20(DAIAddress,amount);
+                await DaiDepositTx.wait();
             } else{
-                console.log("Withdraw WETH")
-                console.log(amount)
+                const DaiWithdrawTx = await sbLendingContract.withdrawERC20(DAIAddress,amount);
+                await DaiWithdrawTx.wait();
             }
         }
         if(contract === "SBL"){
             if(type=='deposit'){
-                console.log("Deposit WETH")
-                console.log(amount)
+                const SBLDepositTx = await sbLendingContract.depositERC20(SBLAddress,amount);
+                await SBLDepositTx.wait();
             } else{
-                console.log("Withdraw WETH")
-                console.log(amount)
+                const SBLWithdrawTx = await sbLendingContract.withdrawERC20(SBLAddress,amount);
+                await SBLWithdrawTx.wait();
             }
         }
 
