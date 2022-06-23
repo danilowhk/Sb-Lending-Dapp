@@ -107,6 +107,349 @@
       "sbLending": {
         "src": "contracts/sbLending-V0.sol:11",
         "version": {
+          "withMetadata": "025afc5e523ed4e904f2078f42c573fe95b51a91c4fbb07167e21bd5f7d3b33a",
+          "withoutMetadata": "65108603713b951258bc15f7923ac62479cfb710023b8733d958df048c687487",
+          "linkedWithoutMetadata": "65108603713b951258bc15f7923ac62479cfb710023b8733d958df048c687487"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath"
+        ],
+        "methods": [
+          "()",
+          "depositERC20(address,uint256)",
+          "withdrawERC20(address,uint256)",
+          "borrowERC20(address,uint256)",
+          "payBackERC20(address,uint256)",
+          "liquidationCall(address,address,address,uint256)",
+          "addTokenInterestFixedInterestRate(address,uint256)",
+          "getInterestRate(address)",
+          "addSoulBondToken(address,uint8,uint256)",
+          "updateBalanceWithInterestRate(address)",
+          "updateAllBalances()",
+          "calculateCollateralPercentage(address)",
+          "calculateMaxBorrow(address)",
+          "calculateMaxBorrowPercentage(address)",
+          "calculateTotalBorrowed(address)",
+          "calculateTotalDeposit(address)",
+          "addBorrowToken(address)",
+          "addDepositToken(address)",
+          "addOracle(address,address)",
+          "getLatestPrice(address)",
+          "setBaseMaxBorrow(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "sbLending",
+            "src": "contracts/sbLending-V0.sol:39"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "baseMaxBorrow",
+            "src": "contracts/sbLending-V0.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "soulBondList",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_array(t_address)dyn_storage",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:13"
+            },
+            {
+              "label": "soulBondCategories",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_address,t_uint8)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:14"
+            },
+            {
+              "label": "categoryPower",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_uint8,t_uint256)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:15"
+            },
+            {
+              "label": "ERC20Oracles",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_mapping(t_address,t_address)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:17"
+            },
+            {
+              "label": "tokenToOracleToken",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_mapping(t_address,t_address)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:18"
+            },
+            {
+              "label": "ERC20BorrowList",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:19"
+            },
+            {
+              "label": "ERC20DepositList",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:20"
+            },
+            {
+              "label": "allowedBorrowedTokens",
+              "offset": 0,
+              "slot": "7",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:21"
+            },
+            {
+              "label": "allowedDepositTokens",
+              "offset": 0,
+              "slot": "8",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:22"
+            },
+            {
+              "label": "userLastTokenUpdate",
+              "offset": 0,
+              "slot": "9",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:23"
+            },
+            {
+              "label": "ERC20BorrowTokens",
+              "offset": 0,
+              "slot": "10",
+              "type": "t_array(t_address)dyn_storage",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:25"
+            },
+            {
+              "label": "ERC20DepositTokens",
+              "offset": 0,
+              "slot": "11",
+              "type": "t_array(t_address)dyn_storage",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:26"
+            },
+            {
+              "label": "baseMaxBorrow",
+              "offset": 0,
+              "slot": "12",
+              "type": "t_uint256",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:28"
+            },
+            {
+              "label": "tokenFixedInterestRate",
+              "offset": 0,
+              "slot": "13",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:34"
+            },
+            {
+              "label": "owner",
+              "offset": 0,
+              "slot": "14",
+              "type": "t_address",
+              "contract": "sbLending",
+              "src": "contracts/sbLending-V0.sol:37"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]",
+              "numberOfBytes": "32"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_address)": {
+              "label": "mapping(address => address)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_uint8)": {
+              "label": "mapping(address => uint8)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint8,t_uint256)": {
+              "label": "mapping(uint8 => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            },
+            "t_uint8": {
+              "label": "uint8",
+              "numberOfBytes": "1"
+            }
+          },
+          "layoutVersion": "1.1",
+          "flat": true
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "beae05454d6c24b0af2926d3f12cbd62c3db4a4f7dff423bd7ff2ddbe2972f20",
+          "withoutMetadata": "08d24783a787f8a51dea0c166bb6f91a4f0865e02d03d749f102d332e6ead0ff",
+          "linkedWithoutMetadata": "08d24783a787f8a51dea0c166bb6f91a4f0865e02d03d749f102d332e6ead0ff"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      }
+    },
+    {
+      "AggregatorV3Interface": {
+        "src": "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "decimals()",
+          "description()",
+          "version()",
+          "getRoundData(uint80)",
+          "latestRoundData()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "IERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/IERC20.sol:9",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "IERC721": {
+        "src": "@openzeppelin/contracts/token/ERC721/IERC721.sol:11",
+        "inherit": [
+          "IERC165"
+        ],
+        "libraries": [],
+        "methods": [
+          "balanceOf(address)",
+          "ownerOf(uint256)",
+          "safeTransferFrom(address,address,uint256,bytes)",
+          "safeTransferFrom(address,address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "approve(address,uint256)",
+          "setApprovalForAll(address,bool)",
+          "getApproved(uint256)",
+          "isApprovedForAll(address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "IERC165": {
+        "src": "@openzeppelin/contracts/utils/introspection/IERC165.sol:15",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "supportsInterface(bytes4)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "SafeMath": {
+        "src": "@openzeppelin/contracts/utils/math/SafeMath.sol:16",
+        "version": {
+          "withMetadata": "b1419d93740f6c540daf5e501ac513fad6cf793e3d3c6f14a2a66f8359d85a7b",
+          "withoutMetadata": "08d24783a787f8a51dea0c166bb6f91a4f0865e02d03d749f102d332e6ead0ff",
+          "linkedWithoutMetadata": "08d24783a787f8a51dea0c166bb6f91a4f0865e02d03d749f102d332e6ead0ff"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "sbLending": {
+        "src": "contracts/sbLending-V0.sol:11",
+        "version": {
           "withMetadata": "37022af72ab4774c80b2fa0d50469d65d6aa28481ad26d1bd7bea866509dad6d",
           "withoutMetadata": "cb0cd551d842e18545f5c996b841c93121b341c38e74d4ea3f778d2b92add0c4",
           "linkedWithoutMetadata": "cb0cd551d842e18545f5c996b841c93121b341c38e74d4ea3f778d2b92add0c4"

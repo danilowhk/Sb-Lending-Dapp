@@ -60,6 +60,15 @@ function App() {
       depositBalance: 0,
       borrowBalance: 0,
   });  
+  //SoulBond List State
+  const [SoulBondData, setSoulBondData] = useState<any>({
+    sClass: 0,
+    aClass: 0 ,
+    bClass: 0,
+    cClass: 0,
+    dClass: 0,
+});  
+
 
   const [totalDepositBalance,setTotalDepositBalance]=useState<any>(0);
   const [totalBorrowBalance,setTotalBorrowBalance]=useState<any>(0);
@@ -104,9 +113,9 @@ function App() {
         const sbLending = new ethers.Contract(SbLendingAddress,sbLendingArtifact.abi,signer);
         const userAddress = await signer.getAddress();
 
-        const WETHPrice =(await sbLending.getLatestPrice(WETHAddress)).toString();
-        const DaiPrice = (await sbLending.getLatestPrice(DAIAddress)).toString();
-        const SblPrice = (await sbLending.getLatestPrice(SBLAddress)).toString();
+        const WETHPrice =ethers.utils.formatEther(await sbLending.getLatestPrice(WETHAddress));
+        const DaiPrice = ethers.utils.formatEther(await sbLending.getLatestPrice(DAIAddress));
+        const SblPrice = ethers.utils.formatEther(await sbLending.getLatestPrice(SBLAddress));
 
         const WETHDepositBalance =(await sbLending.ERC20DepositList(WETHAddress,userAddress)).toString();
         const DaiDepositBalance = (await sbLending.ERC20DepositList(DAIAddress,userAddress)).toString();
@@ -116,15 +125,11 @@ function App() {
         const DaiBorrowBalance = (await sbLending.ERC20BorrowList(DAIAddress,userAddress)).toString();
         const SblBorrowBalance = (await sbLending.ERC20BorrowList(SBLAddress,userAddress)).toString();
 
-        const totalDepositBalanceData = (await sbLending.calculateTotalDeposit(userAddress)).toString();
-        const totalBorrowBalanceData = (await sbLending.calculateTotalBorrowed(userAddress)).toString();
+        const totalDepositBalanceData = ethers.utils.formatEther(await sbLending.calculateTotalDeposit(userAddress));
+        const totalBorrowBalanceData = ethers.utils.formatEther(await sbLending.calculateTotalBorrowed(userAddress));
         const maxCollateralPercentage = (await sbLending.calculateMaxBorrowPercentage(userAddress)).toString();
-
-        // let currentHealthFactor =0;
-        // if(totalDepositBalanceData != 0){
-        //    currentHealthFactor = totalBorrowBalanceData/totalDepositBalanceData;
-        // }
-
+        const currentHealthFactor =(await sbLending.calculateCollateralPercentage(userAddress)).toString();
+       
 
         setTotalDepositBalance(totalDepositBalanceData);
         setTotalBorrowBalance(totalBorrowBalanceData);
@@ -158,10 +163,46 @@ function App() {
             borrowBalance: SblBorrowBalance
         })
 
-
     }
    
-}
+  }
+
+  async function getSoulBondData(){
+
+    if(signer){
+      //Add SoulBond Artifacts
+      const userAddress = await signer.getAddress()
+
+      // const sClassToken = new ethers.Contract(soulBondSAddress,"sbLendingArtifact.abi",signer);
+      // const aClassToken = new ethers.Contract(soulBondAAddress,sbLendingArtifact.abi,signer);
+      // const bClassToken = new ethers.Contract(soulBondBAddress,sbLendingArtifact.abi,signer);
+      // const cClassToken = new ethers.Contract(soulBondCAddress,sbLendingArtifact.abi,signer);
+      // const dClassToken = new ethers.Contract(soulBondDAddress,sbLendingArtifact.abi,signer);
+
+      const sClass = await sClassToken.balanceOf(userAddress);
+      const aClass = await sClassToken.balanceOf(userAddress);
+      const bClass = await sClassToken.balanceOf(userAddress);
+      const cClass = await sClassToken.balanceOf(userAddress);
+      const dClass = await sClassToken.balanceOf(userAddress)
+
+   
+      setSoulBondData({
+        sClass: sClass,
+        aClass: aClass,
+        bClass: bClass,
+        cClass: cClass,
+        dClass: dClass,
+      })
+
+
+
+
+    }
+
+
+  }
+
+
 
  
 

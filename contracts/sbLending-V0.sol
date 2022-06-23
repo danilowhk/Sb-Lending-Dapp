@@ -58,10 +58,11 @@ contract sbLending {
     }
 
     //Borrow a Token
+    //Make logic to Compare Total Deposit Value($) with Total Borrow($) and not Token Balance
     function borrowERC20(address _token, uint256 _value) public {
-        require(IERC20(_token).balanceOf(address(this)) > _value);
+        require(IERC20(_token).balanceOf(address(this)) >= _value);
         updateAllBalances();
-        require(calculateTotalBorrowed(msg.sender) + _value <= calculateMaxBorrow(msg.sender));
+        require(calculateTotalBorrowed(msg.sender) + _value*getLatestPrice(_token) <= calculateMaxBorrow(msg.sender));
         ERC20BorrowList[_token][msg.sender] += _value;
         IERC20(_token).transfer(msg.sender,_value);
 
@@ -163,8 +164,18 @@ contract sbLending {
         }
     }
 
+     function calculateCollateralPercentage(address _user) public view returns(uint256) {
+        uint256 totalDeposit = calculateTotalDeposit(_user);
+        uint256 totalBorrow = calculateTotalBorrowed(_user);
+        uint256 collateralPercentage = 0;
+        if(totalDeposit>0){
+            collateralPercentage=totalBorrow.div(totalDeposit);
+        }
 
-  
+        return collateralPercentage;
+    }
+
+
     //Calculate the Max amount an Address can Borrow
     function calculateMaxBorrow(address _user) public view returns(uint256) {
         uint256 maxBorrowPercentage = calculateMaxBorrowPercentage(_user); 
@@ -173,20 +184,29 @@ contract sbLending {
 
     }
 
+    
+
     function calculateMaxBorrowPercentage(address _user) public view returns(uint256) {
         uint256 maxBorrow = baseMaxBorrow; 
+
         for(uint i; i < soulBondList.length ; i++){
  
             uint amount = (IERC721(soulBondList[i]).balanceOf(_user));
+
             if(IERC721(soulBondList[i]).balanceOf(_user)>0){
+
                 maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]]*amount;
+
             }
         }
+        
         return maxBorrow;
-
     }
+
+     
     //Calculate the total amount in $ Borrowed by an user
     function calculateTotalBorrowed(address _user) public view returns(uint256){
+
         uint256 totalBorrowed;
 
         for(uint i; i< ERC20BorrowTokens.length;i++){
@@ -194,6 +214,7 @@ contract sbLending {
             totalBorrowed += ERC20BorrowList[ERC20BorrowTokens[i]][_user]*getLatestPrice(ERC20BorrowTokens[i]);
 
         }
+
         return totalBorrowed;
     }
 

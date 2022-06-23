@@ -46,48 +46,48 @@ describe("sbLending", function () {
     const SbLending = await hre.ethers.getContractFactory("sbLending",metaMaskSigner);
     sbLending = await SbLending.deploy();
     await sbLending.deployed();
-    console.log(`SoulBond Lending Contract: ${sbLending.address}`)
+    // console.log(`SoulBond Lending Contract: ${sbLending.address}`)
 
     const DaiToken = await hre.ethers.getContractFactory("DaiToken",metaMaskSigner);
     daiToken = await DaiToken.deploy();
     await daiToken.deployed();
-    console.log(`DaiToken Address: ${daiToken.address}`)
+    // console.log(`DaiToken Address: ${daiToken.address}`)
 
     const WETHToken = await hre.ethers.getContractFactory("WETHToken",metaMaskSigner);
     wethToken = await WETHToken.deploy();
     await wethToken.deployed();
-    console.log(`WETHToken Address: ${wethToken.address}`)
+    // console.log(`WETHToken Address: ${wethToken.address}`)
   
     const SblToken = await hre.ethers.getContractFactory("SblToken",metaMaskSigner);
     sblToken = await SblToken.deploy();
     await sblToken.deployed();
-    console.log(`SBLToken Address: ${sblToken.address}`)
+    // console.log(`SBLToken Address: ${sblToken.address}`)
 
     //Deploying SoulBond Tokens
     const SoulBondS = await hre.ethers.getContractFactory("SoulBondS",metaMaskSigner);
     soulBondS = await SoulBondS.deploy();
     await soulBondS.deployed();
-    console.log(`SB-S Address: ${soulBondS.address}`)
+    // console.log(`SB-S Address: ${soulBondS.address}`)
   
     const SoulBondA = await hre.ethers.getContractFactory("SoulBondA",metaMaskSigner);
     const soulBondA = await SoulBondA.deploy();
     await soulBondA.deployed();
-    console.log(`SB-A Address: ${soulBondA.address}`)
+    // console.log(`SB-A Address: ${soulBondA.address}`)
   
     const SoulBondB = await hre.ethers.getContractFactory("SoulBondB",metaMaskSigner);
     const soulBondB = await SoulBondB.deploy();
     await soulBondB.deployed();
-    console.log(`SB-B Address: ${soulBondB.address}`)
+    // console.log(`SB-B Address: ${soulBondB.address}`)
   
     const SoulBondC = await hre.ethers.getContractFactory("SoulBondC",metaMaskSigner);
     const soulBondC = await SoulBondC.deploy();
     await soulBondC.deployed();
-    console.log(`SB-C Address: ${soulBondC.address}`)
+    // console.log(`SB-C Address: ${soulBondC.address}`)
   
     const SoulBondD = await hre.ethers.getContractFactory("SoulBondD",metaMaskSigner);
     const soulBondD = await SoulBondD.deploy();
     await soulBondD.deployed();
-    console.log(`SB-D Address: ${soulBondD.address}`)
+    // console.log(`SB-D Address: ${soulBondD.address}`)
 
     //sbLending Contract Setup:
      //adding SoulBondTokens
@@ -135,21 +135,21 @@ describe("sbLending", function () {
     await daiToken.mint(approveAmount);
     await sblToken.mint(approveAmount);
 
-    console.log(`WETHBalance: ${await wethToken.balanceOf(metaMaskUserAddress)}`)
-    console.log(`DaiBalance: ${await daiToken.balanceOf(metaMaskUserAddress)}`)
-    console.log(`SBLBalance: ${await sblToken.balanceOf(metaMaskUserAddress)}`)
+    // console.log(`WETHBalance: ${await wethToken.balanceOf(metaMaskUserAddress)}`)
+    // console.log(`DaiBalance: ${await daiToken.balanceOf(metaMaskUserAddress)}`)
+    // console.log(`SBLBalance: ${await sblToken.balanceOf(metaMaskUserAddress)}`)
 
   });
 
   it("Check Lending", async function () {
     const WETHallowance = await wethToken.allowance(metaMaskUserAddress,sbLending.address);
-    console.log(`WETH Allowance: ${hre.ethers.utils.formatEther(WETHallowance)} to: ${sbLending.address}`);
+    // console.log(`WETH Allowance: ${hre.ethers.utils.formatEther(WETHallowance)} to: ${sbLending.address}`);
 
     const DaiAllowance = await daiToken.allowance(metaMaskUserAddress,sbLending.address);
-    console.log(`Dai Allowance: ${hre.ethers.utils.formatEther(DaiAllowance)} to: ${sbLending.address}`);
+    // console.log(`Dai Allowance: ${hre.ethers.utils.formatEther(DaiAllowance)} to: ${sbLending.address}`);
 
     const SblAllowance = await sblToken.allowance(metaMaskUserAddress,sbLending.address);
-    console.log(`SBL Allowance: ${hre.ethers.utils.formatEther(SblAllowance)} to: ${sbLending.address}`);
+    // console.log(`SBL Allowance: ${hre.ethers.utils.formatEther(SblAllowance)} to: ${sbLending.address}`);
 
     assert(WETHallowance>0 && DaiAllowance>0 && SblAllowance>0);
 
@@ -167,9 +167,9 @@ describe("sbLending", function () {
     const DAIdepositBalance = await sbLending.ERC20DepositList(daiToken.address,metaMaskUserAddress);
     const SBLdepositBalance = await sbLending.ERC20DepositList(sblToken.address,metaMaskUserAddress);
 
-    console.log(`Current WETH Deposit Balance: ${hre.ethers.utils.formatEther(WETHdepositBalance)}`);
-    console.log(`Current Dai Deposit Balance: ${hre.ethers.utils.formatEther(DAIdepositBalance)}`);
-    console.log(`Current SBL Deposit Balance: ${hre.ethers.utils.formatEther(SBLdepositBalance)}`);
+    // console.log(`Current WETH Deposit Balance: ${hre.ethers.utils.formatEther(WETHdepositBalance)}`);
+    // console.log(`Current Dai Deposit Balance: ${hre.ethers.utils.formatEther(DAIdepositBalance)}`);
+    // console.log(`Current SBL Deposit Balance: ${hre.ethers.utils.formatEther(SBLdepositBalance)}`);
 
     assert(WETHdepositBalance>0 && DAIdepositBalance>0 && SBLdepositBalance>0);
   });
@@ -186,9 +186,9 @@ describe("sbLending", function () {
     const SBLdepositBalance2 = hre.ethers.utils.formatEther(await sbLending.ERC20DepositList(sblToken.address,metaMaskUserAddress));
 
   
-    console.log(`Current WETH Deposit Balance After Withdraw: ${WETHdepositBalance2}`);
-    console.log(`Current Dai Deposit Balance After Withdraw: ${DAIdepositBalance2}`);
-    console.log(`Current Dai Deposit Balance After Withdraw: ${SBLdepositBalance2}`);
+    // console.log(`Current WETH Deposit Balance After Withdraw: ${WETHdepositBalance2}`);
+    // console.log(`Current Dai Deposit Balance After Withdraw: ${DAIdepositBalance2}`);
+    // console.log(`Current Dai Deposit Balance After Withdraw: ${SBLdepositBalance2}`);
 
     assert(SBLdepositBalance2>50 && DAIdepositBalance2>50 && SBLdepositBalance2>50);
     
@@ -199,9 +199,9 @@ describe("sbLending", function () {
     const maxBorrow= hre.ethers.utils.formatEther(await sbLending.calculateMaxBorrow(metaMaskUserAddress));
     const balanceSBS= await soulBondS.balanceOf(metaMaskUserAddress);
 
-    console.log(`SBS Balance: ${balanceSBS}`);
-    console.log(`Total Deposit: ${totalDeposit}`);
-    console.log(`Max Borrow: ${maxBorrow}`);
+    // console.log(`SBS Balance: ${balanceSBS}`);
+    // console.log(`Total Deposit: ${totalDeposit}`);
+    // console.log(`Max Borrow: ${maxBorrow}`);
 
     assert(maxBorrow>0 && maxBorrow<50);
   });
@@ -219,9 +219,9 @@ describe("sbLending", function () {
     const SBLBorrowBalance = hre.ethers.utils.formatEther(await sbLending.ERC20BorrowList(sblToken.address,metaMaskUserAddress));
 
 
-    console.log(`Current WETH Borrow Balance Before Payback: ${WETHborrowBalance}`);
-    console.log(`Current Dai Borrow Balance Before Payback: ${DaiBorrowBalance}`);
-    console.log(`Current SBL Borrow Balance Before Payback: ${SBLBorrowBalance}`);
+    // console.log(`Current WETH Borrow Balance Before Payback: ${WETHborrowBalance}`);
+    // console.log(`Current Dai Borrow Balance Before Payback: ${DaiBorrowBalance}`);
+    // console.log(`Current SBL Borrow Balance Before Payback: ${SBLBorrowBalance}`);
 
     assert(WETHborrowBalance>14 && DaiBorrowBalance>14 && SBLBorrowBalance>14 );
     
@@ -237,9 +237,9 @@ describe("sbLending", function () {
     const DaiBorrowBalance = hre.ethers.utils.formatEther(await sbLending.ERC20BorrowList(wethToken.address,metaMaskUserAddress));
     const SBLBorrowBalance = hre.ethers.utils.formatEther(await sbLending.ERC20BorrowList(wethToken.address,metaMaskUserAddress));
 
-    console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
-    console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
-    console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
+    // console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
+    // console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
+    // console.log(`Current WETH Borrow Balance After Payback: ${WETHborrowBalance2}`);
 
     assert(WETHborrowBalance2<11 && DaiBorrowBalance<11 && SBLBorrowBalance<11 );
   });
@@ -252,10 +252,10 @@ describe("sbLending", function () {
     const WETHborrowAfterLiquidation = hre.ethers.utils.formatEther(await sbLending.ERC20BorrowList(wethToken.address,metaMaskUserAddress));
     const WETHdepositAfterLiquidation = hre.ethers.utils.formatEther(await sbLending.ERC20DepositList(wethToken.address,metaMaskUserAddress));
   
-    console.log(`Borrow Before Liquidation ${WETHborrowBeforeLiquidation}`);
-    console.log(`Borrow After Liquidation ${WETHborrowAfterLiquidation}`);
-    console.log(`Deposit Before Liquidation ${WETHdepositBeforeLiquidation}`);
-    console.log(`Deposit After Liquidation ${WETHdepositAfterLiquidation}`);
+    // console.log(`Borrow Before Liquidation ${WETHborrowBeforeLiquidation}`);
+    // console.log(`Borrow After Liquidation ${WETHborrowAfterLiquidation}`);
+    // console.log(`Deposit Before Liquidation ${WETHdepositBeforeLiquidation}`);
+    // console.log(`Deposit After Liquidation ${WETHdepositAfterLiquidation}`);
 
     assert(WETHdepositAfterLiquidation<WETHdepositBeforeLiquidation && WETHborrowBeforeLiquidation<WETHborrowAfterLiquidation);
   

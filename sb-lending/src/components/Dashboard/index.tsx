@@ -1,5 +1,7 @@
 import { BorrowList } from "../BorrowList";
 import { HealthFactor } from "../HealthFactor";
+import { SoulBondsList } from "../SoulBondsList";
+
 import { List } from "../Lists";
 import { Summary } from "../Summary";
 import { Container } from "./styles";
@@ -47,6 +49,7 @@ export function Dashboard({onOpenDepositModal,onOpenBorrowModal, provider,WETHDa
                 onMaxCollateralFactor={maxCollateralFactor}
                 onCurrentHealthFactor={currentHealthFactor}
                 />
+            <SoulBondsList/>
             <List 
                 onOpenDepositModal={onOpenDepositModal}
                 onOpenBorrowModal={onOpenBorrowModal}
