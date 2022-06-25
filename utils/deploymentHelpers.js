@@ -1,6 +1,18 @@
+const addresses = {
+  WETHOracleAddress: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+  SBLOracleAddress: "0x547a514d5e3769680Ce22B2361c10Ea13619e8a9",
+  DaiOracleAddress: "0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9",
+  mainnetWETHAddress: "0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89",
+  mainnetDaiAddress: "0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589",
+  sbLendingAddress: "0x82EdA215Fa92B45a3a76837C65Ab862b6C7564a8",
+  WETHAddress: "0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89",
+  DaiAddress:"0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589",
+  SblTokenAddress: "0x8fC8CFB7f7362E44E472c690A6e025B80E406458"
+}
+
 async function deployProtocol() {
-  metaMaskSigner = await hre.ethers.getSigner();
-  metaMaskUserAddress = metaMaskSigner.address;
+  const metaMaskSigner = await hre.ethers.getSigner();
+  const metaMaskUserAddress = metaMaskSigner.address;
 
   await hre.ethers.provider.send("hardhat_setBalance", [
     metaMaskUserAddress,
@@ -18,7 +30,7 @@ async function deployProtocol() {
     "sbLending",
     metaMaskSigner
   );
-  sbLending = await SbLending.deploy();
+  const sbLending = await SbLending.deploy();
   await sbLending.deployed();
   // console.log(`SoulBond Lending Contract: ${sbLending.address}`)
 
@@ -26,7 +38,7 @@ async function deployProtocol() {
     "DaiToken",
     metaMaskSigner
   );
-  daiToken = await DaiToken.deploy();
+  const daiToken = await DaiToken.deploy();
   await daiToken.deployed();
   // console.log(`DaiToken Address: ${daiToken.address}`)
 
@@ -34,7 +46,7 @@ async function deployProtocol() {
     "WETHToken",
     metaMaskSigner
   );
-  wethToken = await WETHToken.deploy();
+  const wethToken = await WETHToken.deploy();
   await wethToken.deployed();
   // console.log(`WETHToken Address: ${wethToken.address}`)
 
@@ -42,7 +54,7 @@ async function deployProtocol() {
     "SblToken",
     metaMaskSigner
   );
-  sblToken = await SblToken.deploy();
+  const sblToken = await SblToken.deploy();
   await sblToken.deployed();
   // console.log(`SBLToken Address: ${sblToken.address}`)
 
@@ -51,7 +63,7 @@ async function deployProtocol() {
     "SoulBondS",
     metaMaskSigner
   );
-  soulBondS = await SoulBondS.deploy();
+  const soulBondS = await SoulBondS.deploy();
   await soulBondS.deployed();
   // console.log(`SB-S Address: ${soulBondS.address}`)
 
@@ -117,7 +129,7 @@ async function deployProtocol() {
 
   //Approve Tokens
 
-  let approveAmount = hre.ethers.utils.parseEther("100000");
+  const approveAmount = hre.ethers.utils.parseEther("100000");
   await wethToken.approve(sbLending.address, approveAmount);
   const WETHallowance = await wethToken.allowance(
     metaMaskUserAddress,
@@ -152,4 +164,7 @@ async function deployProtocol() {
   };
 }
 
-module.exports = deployProtocol;
+module.exports = {
+  addresses,
+  deployProtocol,
+}

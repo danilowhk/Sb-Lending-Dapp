@@ -1,11 +1,10 @@
 const { expect } = require("chai");
 const { assert } = require("console");
 const { ethers } = require("hardhat");
-const deployProtocol = require("../utils/deploymentHelpers");
+const { deployProtocol } = require("../utils/deploymentHelpers");
 
 describe("sbLending", function () {
   let metaMaskUserAddress;
-  let metaMaskSigner;
   let sbLending;
   let wethToken;
   let daiToken;

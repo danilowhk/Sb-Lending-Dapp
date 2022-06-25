@@ -7,6 +7,7 @@ const ethers = require("hardhat");
 const { BigNumber } = require("ethers");
 const WETHArtifact = require("../sb-lending/src/contracts/contracts/WETH.sol/WETHToken.json");
 const sbLendingArtifact = require("../sb-lending/src/contracts/contracts/sbLending-V0.sol/sbLending.json");
+const { addresses } = require("../utils/deploymentHelpers");
 
 let sbLending;
 let wethToken;
@@ -15,13 +16,12 @@ let sblToken;
 
 async function main() {
   //Ethereum Mainnet Oracles
-  const WETHOracleAddress = "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4";
-  const SBLOracleAddress = "0x547a514d5e3769680Ce22B2361c10Ea13619e8a9";
-  const DaiOracleAddress = "0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9";
+  const { WETHOracleAddress,
+    DaiOracleAddress,
+    mainnetWETHAddress,
+    mainnetDaiAddress } = addresses;
 
   //Mainnet WETH, DAI, Aave Addres;
-  const mainnetWETHAddress = "0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89";
-  const mainnetDaiAddress = "0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589";
   const mainnetAaveAddress = "";
   const metaMaskUserAddress = "0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8";
 
@@ -40,7 +40,7 @@ async function main() {
   const DaiToken = await hre.ethers.getContractFactory("DaiToken");
   daiToken = await DaiToken.deploy();
   await daiToken.deployed();
-  console.log(`daiToken Address: ${daiToken}`);
+  console.log(`daiToken Address: ${daiToken.address}`);
 
   const WETHToken = await hre.ethers.getContractFactory("WETHToken");
   wethToken = await WETHToken.deploy();

@@ -1,34 +1,18 @@
-const { BigNumber } = require("ethers");
-const ethers = require("hardhat");
+const { addresses } = require("../utils/deploymentHelpers");
 
 async function main() {
-  let metaMaskUserAddress = "0xd770134156f9aB742fDB4561A684187f733A9586";
-  const ETHWhale = "0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8";
+  const metaMaskSigner = await hre.ethers.getSigner();
+  const metaMaskUserAddress = metaMaskSigner.address;
 
-  //Impersonate Whale
-  await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [ETHWhale],
-  });
-
-  const ETHsigner = await hre.ethers.getSigner(ETHWhale);
-
-  //send ETH
-  await ETHsigner.sendTransaction({
-    to: metaMaskUserAddress,
-    value: hre.ethers.utils.parseEther("2000"), // 1000 ether
-  });
+  await hre.ethers.provider.send("hardhat_setBalance", [
+    metaMaskUserAddress,
+    ethers.utils.parseUnits("1000", "ether").toHexString().replace("0x0", "0x"),
+  ]);
 
   //Ethereum Mainnet Oracles
-  const WETHOracleAddress = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
-  const SBLOracleAddress = "0x547a514d5e3769680Ce22B2361c10Ea13619e8a9";
-  const DaiOracleAddress = "0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9";
-  //Address to be used in Metamask
-  await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [metaMaskUserAddress],
-  });
-  metaMaskSigner = await hre.ethers.getSigner(metaMaskUserAddress);
+  const { WETHOracleAddress,
+    DaiOracleAddress,
+    SBLOracleAddress } = addresses;
 
   //ERC20 Tokens Deployment
 

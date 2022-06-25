@@ -3,13 +3,14 @@ const ethers = require("hardhat");
 const { BigNumber } = require("ethers");
 const WETHArtifact = require("../sb-lending/src/contracts/contracts/WETH.sol/WETHToken.json");
 const sbLendingArtifact = require("../sb-lending/src/contracts/contracts/sbLending-V0.sol/sbLending.json");
+const { addresses } = require("../utils/deploymentHelpers");
 
 async function main() {
   //Mainnet WETH, DAI, Aave Address;
-  const sbLendingAddress = "0x82EdA215Fa92B45a3a76837C65Ab862b6C7564a8";
-  const WETHAddress = "0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89";
-  const DaiAddress = "0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589";
-  const SblTokenAddress = "0x8fC8CFB7f7362E44E472c690A6e025B80E406458";
+  const { WETHAddress,
+    DaiAddress,
+    SblTokenAddress,
+    sbLendingAddress } = addresses;
 
   const metaMaskUserAddress = "0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8";
 
