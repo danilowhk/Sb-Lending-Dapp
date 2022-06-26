@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 
-contract SouldBondS is ERC721 {
+contract SoulBondS is ERC721 {
     address owner;
     uint public counter;
     using Counters for Counters.Counter;
