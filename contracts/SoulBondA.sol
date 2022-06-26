@@ -1,22 +1,30 @@
-//SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.1;
+
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 
 contract SoulBondA is ERC721 {
-
     address owner;
     uint public counter;
-    constructor() ERC721("SoulBondSA","SB-A"){
-        owner = msg.sender;
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("SoulBondA","SB-A") {
+        owner=msg.sender;
         mint(owner);
         
     }
 
-    function mint(address _user) public {
-        require(owner==msg.sender);
-        _mint(_user, counter);
-        counter+=1;
+    function mint(address player) public {
+        require(msg.sender==owner);
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _mint(player, newItemId);
+
     }
 
     function transferFrom(
@@ -53,3 +61,4 @@ contract SoulBondA is ERC721 {
         revert();
     }
 }
+
