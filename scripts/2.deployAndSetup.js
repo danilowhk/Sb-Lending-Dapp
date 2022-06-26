@@ -16,10 +16,12 @@ let sblToken;
 
 async function main() {
   //Ethereum Mainnet Oracles
-  const { WETHOracleAddress,
+  const {
+    WETHOracleAddress,
     DaiOracleAddress,
     mainnetWETHAddress,
-    mainnetDaiAddress } = addresses;
+    mainnetDaiAddress,
+  } = addresses;
 
   //Mainnet WETH, DAI, Aave Addres;
   const mainnetAaveAddress = "";

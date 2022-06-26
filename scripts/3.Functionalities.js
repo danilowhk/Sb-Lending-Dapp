@@ -7,10 +7,8 @@ const { addresses } = require("../utils/deploymentHelpers");
 
 async function main() {
   //Mainnet WETH, DAI, Aave Address;
-  const { WETHAddress,
-    DaiAddress,
-    SblTokenAddress,
-    sbLendingAddress } = addresses;
+  const { WETHAddress, DaiAddress, SblTokenAddress, sbLendingAddress } =
+    addresses;
 
   const metaMaskUserAddress = "0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8";
 

@@ -6,9 +6,9 @@ const addresses = {
   mainnetDaiAddress: "0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589",
   sbLendingAddress: "0x82EdA215Fa92B45a3a76837C65Ab862b6C7564a8",
   WETHAddress: "0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89",
-  DaiAddress:"0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589",
-  SblTokenAddress: "0x8fC8CFB7f7362E44E472c690A6e025B80E406458"
-}
+  DaiAddress: "0x87006e75a5B6bE9D1bbF61AC8Cd84f05D9140589",
+  SblTokenAddress: "0x8fC8CFB7f7362E44E472c690A6e025B80E406458",
+};
 
 async function deployProtocol() {
   const metaMaskSigner = await hre.ethers.getSigner();
@@ -161,10 +161,11 @@ async function deployProtocol() {
     daiToken,
     sblToken,
     soulBondS,
+    soulBondD,
   };
 }
 
 module.exports = {
   addresses,
   deployProtocol,
-}
+};

@@ -10,9 +10,7 @@ async function main() {
   ]);
 
   //Ethereum Mainnet Oracles
-  const { WETHOracleAddress,
-    DaiOracleAddress,
-    SBLOracleAddress } = addresses;
+  const { WETHOracleAddress, DaiOracleAddress, SBLOracleAddress } = addresses;
 
   //ERC20 Tokens Deployment
 

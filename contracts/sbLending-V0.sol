@@ -219,14 +219,13 @@ contract sbLending {
     }
 
     //Calculate the total amount in $ Deposited by an user
-     function calculateTotalDeposit(address _user) public view returns(uint256){
+    // TODO: maybe we need to change _user with msg.sender?
+     function calculateTotalDeposit(address _user) public view returns(uint256) {
         uint256 totalDeposit;
 
 
         for(uint i=0; i< ERC20DepositTokens.length;i++){
-
-            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user]*getLatestPrice(ERC20DepositTokens[i]);
-
+            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user] * getLatestPrice(ERC20DepositTokens[i]) / 10**decimals;
         }
         return totalDeposit;
     }
