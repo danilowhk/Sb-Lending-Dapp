@@ -12,7 +12,7 @@ contract SouldBondD is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor() ERC721("SoulBondSD","SB-D") {
+    constructor() ERC721("SoulBondD","SB-D") {
         owner=msg.sender;
         mint(owner);
         
