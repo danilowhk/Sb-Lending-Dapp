@@ -13,9 +13,14 @@ describe("Alice", function () {
   let soulBondS;
   let soulBondD;
   let aliceTotalDeposit;
+  let bobTotalDeposit;
+  let bobDTokensNumber;
+  let aliceSTokensNumber;
+  
   let aliceDaiDeposited = ethers.utils.parseEther('100');
+  let bobTotalDeposited = ethers.utils.parseEther('100');
 
-  const bobWETHDeposit = ethers.utils.parseEther("5");
+  const bobWethDeposit = ethers.utils.parseEther("5");
 
   const approveAmount = ethers.utils.parseEther('100000');
 
@@ -29,7 +34,8 @@ describe("Alice", function () {
     aliceSigner = await hre.ethers.getSigner();
     bobSigner = await hre.ethers.getSigner();
 
-    aliceAddress = aliceSigner.address;
+    let aliceAddress = aliceSigner.address;
+    let bobAddress = bobSigner.address;
 
     await hre.ethers.provider.send("hardhat_setBalance", [
       aliceSigner.address,
@@ -47,11 +53,9 @@ describe("Alice", function () {
         .replace("0x0", "0x"),
     ]);
 
-    await wethToken.connect(aliceSigner).mint(ethers.utils.parseEther("100"));
-    await wethToken.connect(bobSigner).mint(ethers.utils.parseEther("100"));
+  
 
     await daiToken.connect(aliceSigner).mint(ethers.utils.parseEther("100"));
-    await daiToken.connect(bobSigner).mint(ethers.utils.parseEther("100"));
 
     await soulBondS.connect(metaMaskSigner).mint(aliceSigner.address)
 
@@ -64,8 +68,34 @@ describe("Alice", function () {
     console.log(`Alice Total Deposit: ${aliceTotalDeposit}`)
 
     aliceSTokensNumber = await soulBondS.balanceOf(aliceSigner.address) // > 0;
+    console.log("Alice NFT: "+ aliceSTokensNumber);
+    console.log();
 
     console.log(await sbLending.ERC20DepositList(daiToken.address, aliceAddress));
+    console.log();
+    
+
+    await wethToken.connect(bobSigner).mint(ethers.utils.parseEther("5"));
+    
+    await soulBondD.connect(metaMaskSigner).mint(bobSigner.address)
+
+    await wethToken.connect(bobSigner).approve(sbLending.address, approveAmount);
+
+    console.log('5 WETH = ' + ethers.utils.parseEther('5000'))
+    await sbLending.connect(bobSigner).depositERC20(wethToken.address, bobWethDeposited);
+
+    bobTotalDeposit = await sbLending.calculateTotalDeposit(bobSigner.address);
+    console.log(`Bob Total Deposit: ${bobTotalDeposit}`)
+
+    bobDTokensNumber = await soulBondD.balanceOf(bobSigner.address)
+    console.log("Bob NFT: "+ bobDTokensNumber);
+    console.log();
+
+    console.log(await sbLending.ERC20DepositList(wethToken.address, bobAddress));
+    console.log();
+    
+
+    
 
     // const ETHWhale = "0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8";
 
@@ -172,8 +202,98 @@ describe("Alice", function () {
   //     assert(ex, "expected the transaction to revert");
   //   });
   // });
-  it("should hold Dai", async function () {
+  it("Alice should have some Dai", async function () {
     daiPrice = await sbLending.getLatestPrice(daiToken.address);
     assert(aliceTotalDeposit.toString() === (daiPrice * 100).toString());
   });
+
+  it("Bob should have WETH", async function () {
+    wethPrice = await sbLending.getLatestPrice(wethToken.address);
+    assert(bobTotalDeposit.toString() === (wethPrice * 100).toString());
+  });
+  
+    it("Alice should have deposited some DAI", async function () {
+      const balance = await daiToken.balanceOf(aliceAddress);
+        assert.equal(balance.toString(), aliceTotalDeposit.tostring());
+    });
+
+    it("Bob should have deposited some WETH", async function () {
+      const balance = await wethToken.balanceOf(bobAddress);
+        assert.equal(balance.toString(), bobTotalDeposit.tostring());
+    });
+
+    it("Alice should have a Sould Bond S NFT", async function () {
+      soulBondS = await soulBondS.balanceOf(aliceAddress);
+      assert(soulBondS.toString()>0);
+    });
+
+    it("Bob should have a Soul Bond D NFT", async function () {
+      soulBondD = await soulBondD.balanceOf(bobAddress);
+      assert(soulBondD.toString()>0);
+    });
+
+    it("Alice shouldn't be able to transfer her NFT", async function () {
+      soulBondS = await soulBondS.balanceOf(aliceAddress);
+      let ex;
+       try {
+            let tryingTransfer= await soulBondS.transferFrom(aliceAddress, bobAddress, aliceSTokensNumber)
+           } catch (_ex) {
+         ex = _ex;
+         }
+           assert(ex, "expected the transaction to revert");
+         });
+
+    it("Bob shouldn't be able to transfer his NFT", async function () {
+      soulBondD = await soulBondD.balanceOf(bobAddress);
+      let ex;
+       try {
+            let tryingTransfer= await soulBondB.transferFrom(bobAddress, bobAddress, bobDTokensNumber)
+           } catch (_ex) {
+         ex = _ex;
+         }
+           assert(ex, "expected the transaction to revert");
+         });
+
+    it("Alice should be able to borrow max amount", async function () {
+      daiPrice = await sbLending.getLatestPrice(daiToken.address);
+      maxAmount= daiPrice/18 * aliceTotalDeposit * 90/100
+      
+      assert(aliceTotalDeposit.toString()<= maxAmount.toString());
+    });
+
+    it("Bob should be able to borrow max amount", async function () {
+        wethPrice = await sbLending.getLatestPrice(daiToken.address);
+        maxAmount= wethPrice/18 * bobTotalDeposit * 70/100
+        
+        assert(bobTotalDeposit.toString()<= maxAmount.toString());
+    });
+    
+    it("Alice should not be able to borrow above max amount", async function () {
+      daiPrice = await sbLending.getLatestPrice(daiToken.address);
+      maxAmount= daiPrice/18 * aliceTotalDeposit * 90/100
+      try{
+        
+      let aboveMaxAmount= daiPrice/18 * aliceTotalDeposit * 70/100+1
+      let bobTryingAmount= await sbLending.borrowERC20(daiToken.address, aboveMaxAmount)
+        } catch (_ex){
+          ex=_ex;
+            }
+      assert(ex, "expected the transaction to revert");
+      
+    });
+    
+    it("Bob should not be able to borrow above max amount", async function () {
+      wethPrice = await sbLending.getLatestPrice(daiToken.address);
+
+      try{
+      let aboveMaxAmount= wethPrice/18 * bobTotalDeposit * 70/100+1
+      let bobTryingAmount= await sbLending.borrowERC20(WethToken.address, aboveMaxAmount)
+} catch (_ex){
+  ex=_ex;
+}
+      assert(ex, "expected the transaction to revert");
+      
+    });
+
+  
 });
