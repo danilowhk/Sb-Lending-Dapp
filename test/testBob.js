@@ -18,7 +18,7 @@ describe("Alice", function () {
   let aliceSTokensNumber;
   
   let aliceDaiDeposited = ethers.utils.parseEther('100');
-  let bobTotalDeposited = ethers.utils.parseEther('100');
+  let bobWethDeposited = ethers.utils.parseEther('100');
 
   const bobWethDeposit = ethers.utils.parseEther("5");
 
