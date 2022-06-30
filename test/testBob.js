@@ -10,8 +10,8 @@ describe("Alice", function () {
   let bob;
   let sbLending;
   let depositorSigner;
-  let soulBondS;
-  let soulBondD;
+  let soulBoundS;
+  let soulBoundD;
   let aliceTotalDeposit;
   let bobTotalDeposit;
   let bobDTokensNumber;
@@ -28,7 +28,7 @@ describe("Alice", function () {
   let bobSigner;
 
   before("", async function () {
-    ({ wethToken, daiToken, sbLending, metaMaskSigner, soulBondS, soulBondD } =
+    ({ wethToken, daiToken, sbLending, metaMaskSigner, soulBoundS, soulBoundD } =
       await deployProtocol());
 
     aliceSigner = await hre.ethers.getSigner();
@@ -57,7 +57,7 @@ describe("Alice", function () {
 
     await daiToken.connect(aliceSigner).mint(ethers.utils.parseEther("100"));
 
-    await soulBondS.connect(metaMaskSigner).mint(aliceSigner.address)
+    await soulBoundS.connect(metaMaskSigner).mint(aliceSigner.address)
 
     await daiToken.connect(aliceSigner).approve(sbLending.address, approveAmount);
 
@@ -67,7 +67,7 @@ describe("Alice", function () {
     aliceTotalDeposit = await sbLending.calculateTotalDeposit(aliceSigner.address);
     console.log(`Alice Total Deposit: ${aliceTotalDeposit}`)
 
-    aliceSTokensNumber = await soulBondS.balanceOf(aliceSigner.address) // > 0;
+    aliceSTokensNumber = await soulBoundS.balanceOf(aliceSigner.address) // > 0;
     console.log("Alice NFT: "+ aliceSTokensNumber);
     console.log();
 
@@ -77,7 +77,7 @@ describe("Alice", function () {
 
     await wethToken.connect(bobSigner).mint(ethers.utils.parseEther("5"));
     
-    await soulBondD.connect(metaMaskSigner).mint(bobSigner.address)
+    await soulBoundD.connect(metaMaskSigner).mint(bobSigner.address)
 
     await wethToken.connect(bobSigner).approve(sbLending.address, approveAmount);
 
@@ -87,7 +87,7 @@ describe("Alice", function () {
     bobTotalDeposit = await sbLending.calculateTotalDeposit(bobSigner.address);
     console.log(`Bob Total Deposit: ${bobTotalDeposit}`)
 
-    bobDTokensNumber = await soulBondD.balanceOf(bobSigner.address)
+    bobDTokensNumber = await soulBoundD.balanceOf(bobSigner.address)
     console.log("Bob NFT: "+ bobDTokensNumber);
     console.log();
 
@@ -131,7 +131,7 @@ describe("Alice", function () {
     // );
     // sbLending = await SbLending.deploy();
     // await sbLending.deployed();
-    // console.log(`SoulBond Lending Contract: ${sbLending.address}`);
+    // console.log(`SoulBound Lending Contract: ${sbLending.address}`);
 
     // const DaiToken = await hre.ethers.getContractFactory(
     //   "DaiToken",
@@ -222,21 +222,21 @@ describe("Alice", function () {
         assert.equal(balance.toString(), bobTotalDeposit.tostring());
     });
 
-    it("Alice should have a Sould Bond S NFT", async function () {
-      soulBondS = await soulBondS.balanceOf(aliceAddress);
-      assert(soulBondS.toString()>0);
+    it("Alice should have a Sould Bound S NFT", async function () {
+      soulBoundS = await soulBoundS.balanceOf(aliceAddress);
+      assert(soulBoundS.toString()>0);
     });
 
-    it("Bob should have a Soul Bond D NFT", async function () {
-      soulBondD = await soulBondD.balanceOf(bobAddress);
-      assert(soulBondD.toString()>0);
+    it("Bob should have a Soul Bound D NFT", async function () {
+      soulBoundD = await soulBoundD.balanceOf(bobAddress);
+      assert(soulBoundD.toString()>0);
     });
 
     it("Alice shouldn't be able to transfer her NFT", async function () {
-      soulBondS = await soulBondS.balanceOf(aliceAddress);
+      soulBoundS = await soulBoundS.balanceOf(aliceAddress);
       let ex;
        try {
-            let tryingTransfer= await soulBondS.transferFrom(aliceAddress, bobAddress, aliceSTokensNumber)
+            let tryingTransfer= await soulBoundS.transferFrom(aliceAddress, bobAddress, aliceSTokensNumber)
            } catch (_ex) {
          ex = _ex;
          }
@@ -244,10 +244,10 @@ describe("Alice", function () {
          });
 
     it("Bob shouldn't be able to transfer his NFT", async function () {
-      soulBondD = await soulBondD.balanceOf(bobAddress);
+      soulBoundD = await soulBoundD.balanceOf(bobAddress);
       let ex;
        try {
-            let tryingTransfer= await soulBondB.transferFrom(bobAddress, bobAddress, bobDTokensNumber)
+            let tryingTransfer= await soulBoundB.transferFrom(bobAddress, bobAddress, bobDTokensNumber)
            } catch (_ex) {
          ex = _ex;
          }

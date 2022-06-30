@@ -1,6 +1,6 @@
 import { BorrowList } from "../BorrowList";
 import { HealthFactor } from "../HealthFactor";
-import { SoulBondsList } from "../SoulBondsList";
+import { SoulBoundsList } from "../SoulBoundsList";
 
 import { List } from "../Lists";
 import { Summary } from "../Summary";
@@ -48,7 +48,7 @@ export function Dashboard({
         onMaxCollateralFactor={maxCollateralFactor}
         onCurrentHealthFactor={currentHealthFactor}
       />
-      <SoulBondsList />
+      <SoulBoundsList />
       <List
         onOpenDepositModal={onOpenDepositModal}
         onOpenBorrowModal={onOpenBorrowModal}
