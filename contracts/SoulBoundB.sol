@@ -6,13 +6,13 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 
-contract SoulBondC is ERC721 {
+contract SoulBoundB is ERC721 {
     address owner;
     uint public counter;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor() ERC721("SoulBondC","SB-C") {
+    constructor() ERC721("SoulBoundB","SB-B") {
         owner=msg.sender;
         mint(owner);
         

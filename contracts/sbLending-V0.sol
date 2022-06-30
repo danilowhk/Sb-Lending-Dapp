@@ -10,8 +10,8 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract sbLending {
     using SafeMath for uint256;
-    address[] public soulBondList;
-    mapping(address => uint8) public soulBondCategories;
+    address[] public soulBoundList;
+    mapping(address => uint8) public soulBoundCategories;
     mapping(uint8 => uint) public categoryPower;
 
     mapping(address => address) public ERC20Oracles;
@@ -132,12 +132,12 @@ contract sbLending {
     //get a fixed price form a token Address
 
 
-    //add a SoulBond Token to the List
-    function addSoulBondToken(address _token, uint8 _category, uint _power ) external {
+    //add a SoulBound Token to the List
+    function addSoulBoundToken(address _token, uint8 _category, uint _power ) external {
         require(msg.sender == owner);
         require(_category > 0);
-        soulBondList.push(_token);
-        soulBondCategories[_token] = _category;
+        soulBoundList.push(_token);
+        soulBoundCategories[_token] = _category;
         categoryPower[_category] = _power;
 
     }
@@ -189,13 +189,13 @@ contract sbLending {
     function calculateMaxBorrowPercentage(address _user) public view returns(uint256) {
         uint256 maxBorrow = baseMaxBorrow; 
 
-        for(uint i; i < soulBondList.length ; i++){
+        for(uint i; i < soulBoundList.length ; i++){
  
-            uint amount = (IERC721(soulBondList[i]).balanceOf(_user));
+            uint amount = (IERC721(soulBoundList[i]).balanceOf(_user));
 
-            if(IERC721(soulBondList[i]).balanceOf(_user)>0){
+            if(IERC721(soulBoundList[i]).balanceOf(_user)>0){
 
-                maxBorrow += categoryPower[soulBondCategories[soulBondList[i]]]*amount;
+                maxBorrow += categoryPower[soulBoundCategories[soulBoundList[i]]]*amount;
 
             }
         }

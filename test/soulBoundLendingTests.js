@@ -9,7 +9,7 @@ describe("sbLending", function () {
   let wethToken;
   let daiToken;
   let sblToken;
-  let soulBondS;
+  let soulBoundS;
 
   before("", async function () {
     ({
@@ -19,7 +19,7 @@ describe("sbLending", function () {
       wethToken,
       daiToken,
       sblToken,
-      soulBondS,
+      soulBoundS,
     } = await deployProtocol());
   });
 
@@ -107,7 +107,7 @@ describe("sbLending", function () {
     const maxBorrow = hre.ethers.utils.formatEther(
       await sbLending.calculateMaxBorrow(metaMaskUserAddress)
     );
-    const balanceSBS = await soulBondS.balanceOf(metaMaskUserAddress);
+    const balanceSBS = await soulBoundS.balanceOf(metaMaskUserAddress);
 
     // console.log(`SBS Balance: ${balanceSBS}`);
     // console.log(`Total Deposit: ${totalDeposit}`);

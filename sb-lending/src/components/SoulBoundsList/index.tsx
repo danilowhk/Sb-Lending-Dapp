@@ -2,10 +2,10 @@ import { Container } from "./styles";
 
 interface ListProps {}
 
-export function SoulBondsList({}: ListProps) {
+export function SoulBoundsList({}: ListProps) {
   return (
     <Container>
-      <h1>SoulBond Tokens Count</h1>
+      <h1>SoulBound Tokens Count</h1>
       <div>
         <span>
           <p>S Class</p>

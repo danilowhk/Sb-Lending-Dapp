@@ -200,8 +200,8 @@ async function main() {
   //3. Check new Balance
   //4. Test Liquidation due to Interest Rate Accumulation
 
-  //Test SoulBond Tokens Extra Collateralization(done)
-  //Test Negative SoulBond Token Minting
+  //Test SoulBound Tokens Extra Collateralization(done)
+  //Test Negative SoulBound Token Minting
 }
 
 main()

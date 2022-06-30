@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deployLocal": "npx hardhat run scripts/1.transferFundsFork.js --network localhost && npx hardhat run scripts/2.deployAndSetup.js --network localhost  && npx hardhat run scripts/3.Functionalities.js --network localhost",
-    "testLocal": "npx hardhat test test/soulBondLendingTests.js"
+    "testLocal": "npx hardhat test test/soulBoundLendingTests.js"
   },
   "keywords": [],
   "author": "",

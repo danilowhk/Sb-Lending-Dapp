@@ -7,7 +7,7 @@ import { NewBorrowModal } from "./components/NewBorrowModal";
 import { ethers } from "ethers";
 import sbLendingArtifact from "./contracts/contracts/sbLending-V0.sol/sbLending.json";
 import WETHArtifact from "./contracts/contracts/WETH.sol/WETHToken.json";
-import SoulBondSArtifact from "./contracts/contracts/SoulBondS.sol/SoulBondS.json";
+import SoulBoundSArtifact from "./contracts/contracts/SoulBoundS.sol/SoulBoundS.json";
 import { BigNumber } from "ethers";
 
 import { useState, useEffect } from "react";
@@ -53,8 +53,8 @@ function App() {
     depositBalance: 0,
     borrowBalance: 0,
   });
-  //SoulBond List State
-  const [SoulBondData, setSoulBondData] = useState<any>({
+  //SoulBound List State
+  const [SoulBoundData, setSoulBoundData] = useState<any>({
     sClass: 0,
     aClass: 0,
     bClass: 0,
@@ -73,12 +73,12 @@ function App() {
   const DAIAddress = "0x8a8c52A98a67f8e762482B6B17B9a17fcEe46352";
   const SBLAddress = "0xc2C2A117B4f9fd7d73FB7695E075216dC0348FBC";
 
-  //SoulBond Tokens Address
-  const soulBondSAddress = "0x7228f2c0f1E7948024056e1bc1CC310850f46432";
-  const soulBondAAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
-  const soulBondBAddress = "0xE3F6cbFad9DB22acFD4251dd87B162AffCD2ae69";
-  const soulBondCAddress = "0x46F411c24ffF4338Fb1f09a026Da1a3F3b764Ec5";
-  const soulBondDAddress = "0x43b2EeD08547671220749bFE390fF45516c49134";
+  //SoulBound Tokens Address
+  const soulBoundSAddress = "0x7228f2c0f1E7948024056e1bc1CC310850f46432";
+  const soulBoundAAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
+  const soulBoundBAddress = "0xE3F6cbFad9DB22acFD4251dd87B162AffCD2ae69";
+  const soulBoundCAddress = "0x46F411c24ffF4338Fb1f09a026Da1a3F3b764Ec5";
+  const soulBoundDAddress = "0x43b2EeD08547671220749bFE390fF45516c49134";
 
   const ERC20Abi = WETHArtifact.abi;
   const sbLendingAbi = sbLendingArtifact.abi;
@@ -181,16 +181,16 @@ function App() {
     }
   }
 
-  async function getSoulBondData() {
+  async function getSoulBoundData() {
     if (signer) {
-      //Add SoulBond Artifacts
+      //Add SoulBound Artifacts
       const userAddress = await signer.getAddress();
 
-      // const sClassToken = new ethers.Contract(soulBondSAddress,"sbLendingArtifact.abi",signer);
-      // const aClassToken = new ethers.Contract(soulBondAAddress,sbLendingArtifact.abi,signer);
-      // const bClassToken = new ethers.Contract(soulBondBAddress,sbLendingArtifact.abi,signer);
-      // const cClassToken = new ethers.Contract(soulBondCAddress,sbLendingArtifact.abi,signer);
-      // const dClassToken = new ethers.Contract(soulBondDAddress,sbLendingArtifact.abi,signer);
+      // const sClassToken = new ethers.Contract(soulBoundSAddress,"sbLendingArtifact.abi",signer);
+      // const aClassToken = new ethers.Contract(soulBoundAAddress,sbLendingArtifact.abi,signer);
+      // const bClassToken = new ethers.Contract(soulBoundBAddress,sbLendingArtifact.abi,signer);
+      // const cClassToken = new ethers.Contract(soulBoundCAddress,sbLendingArtifact.abi,signer);
+      // const dClassToken = new ethers.Contract(soulBoundDAddress,sbLendingArtifact.abi,signer);
 
       const sClass = await sClassToken.balanceOf(userAddress);
       const aClass = await sClassToken.balanceOf(userAddress);
@@ -198,7 +198,7 @@ function App() {
       const cClass = await sClassToken.balanceOf(userAddress);
       const dClass = await sClassToken.balanceOf(userAddress);
 
-      setSoulBondData({
+      setSoulBoundData({
         sClass: sClass,
         aClass: aClass,
         bClass: bClass,

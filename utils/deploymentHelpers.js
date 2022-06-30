@@ -32,7 +32,7 @@ async function deployProtocol() {
   );
   const sbLending = await SbLending.deploy();
   await sbLending.deployed();
-  // console.log(`SoulBond Lending Contract: ${sbLending.address}`)
+  // console.log(`SoulBound Lending Contract: ${sbLending.address}`)
 
   const DaiToken = await hre.ethers.getContractFactory(
     "DaiToken",
@@ -58,54 +58,54 @@ async function deployProtocol() {
   await sblToken.deployed();
   // console.log(`SBLToken Address: ${sblToken.address}`)
 
-  //Deploying SoulBond Tokens
-  const SoulBondS = await hre.ethers.getContractFactory(
-    "SoulBondS",
+  //Deploying SoulBound Tokens
+  const SoulBoundS = await hre.ethers.getContractFactory(
+    "SoulBoundS",
     metaMaskSigner
   );
-  const soulBondS = await SoulBondS.deploy();
-  await soulBondS.deployed();
-  // console.log(`SB-S Address: ${soulBondS.address}`)
+  const soulBoundS = await SoulBoundS.deploy();
+  await soulBoundS.deployed();
+  // console.log(`SB-S Address: ${soulBoundS.address}`)
 
-  const SoulBondA = await hre.ethers.getContractFactory(
-    "SoulBondA",
+  const SoulBoundA = await hre.ethers.getContractFactory(
+    "SoulBoundA",
     metaMaskSigner
   );
-  const soulBondA = await SoulBondA.deploy();
-  await soulBondA.deployed();
-  // console.log(`SB-A Address: ${soulBondA.address}`)
+  const soulBoundA = await SoulBoundA.deploy();
+  await soulBoundA.deployed();
+  // console.log(`SB-A Address: ${soulBoundA.address}`)
 
-  const SoulBondB = await hre.ethers.getContractFactory(
-    "SoulBondB",
+  const SoulBoundB = await hre.ethers.getContractFactory(
+    "SoulBoundB",
     metaMaskSigner
   );
-  const soulBondB = await SoulBondB.deploy();
-  await soulBondB.deployed();
-  // console.log(`SB-B Address: ${soulBondB.address}`)
+  const soulBoundB = await SoulBoundB.deploy();
+  await soulBoundB.deployed();
+  // console.log(`SB-B Address: ${soulBoundB.address}`)
 
-  const SoulBondC = await hre.ethers.getContractFactory(
-    "SoulBondC",
+  const SoulBoundC = await hre.ethers.getContractFactory(
+    "SoulBoundC",
     metaMaskSigner
   );
-  const soulBondC = await SoulBondC.deploy();
-  await soulBondC.deployed();
-  // console.log(`SB-C Address: ${soulBondC.address}`)
+  const soulBoundC = await SoulBoundC.deploy();
+  await soulBoundC.deployed();
+  // console.log(`SB-C Address: ${soulBoundC.address}`)
 
-  const SoulBondD = await hre.ethers.getContractFactory(
-    "SoulBondD",
+  const SoulBoundD = await hre.ethers.getContractFactory(
+    "SoulBoundD",
     metaMaskSigner
   );
-  const soulBondD = await SoulBondD.deploy();
-  await soulBondD.deployed();
-  // console.log(`SB-D Address: ${soulBondD.address}`)
+  const soulBoundD = await SoulBoundD.deploy();
+  await soulBoundD.deployed();
+  // console.log(`SB-D Address: ${soulBoundD.address}`)
 
   //sbLending Contract Setup:
-  //adding SoulBondTokens
-  await sbLending.addSoulBondToken(soulBondS.address, 1, 7);
-  await sbLending.addSoulBondToken(soulBondA.address, 2, 5);
-  await sbLending.addSoulBondToken(soulBondB.address, 3, 3);
-  await sbLending.addSoulBondToken(soulBondC.address, 4, 2);
-  await sbLending.addSoulBondToken(soulBondD.address, 5, 1);
+  //adding SoulBoundTokens
+  await sbLending.addSoulBoundToken(soulBoundS.address, 1, 7);
+  await sbLending.addSoulBoundToken(soulBoundA.address, 2, 5);
+  await sbLending.addSoulBoundToken(soulBoundB.address, 3, 3);
+  await sbLending.addSoulBoundToken(soulBoundC.address, 4, 2);
+  await sbLending.addSoulBoundToken(soulBoundD.address, 5, 1);
 
   //Adding Oracles(WETH only)
   await sbLending.addOracle(wethToken.address, WETHOracleAddress);
@@ -160,8 +160,8 @@ async function deployProtocol() {
     wethToken,
     daiToken,
     sblToken,
-    soulBondS,
-    soulBondD,
+    soulBoundS,
+    soulBoundD,
   };
 }
 
