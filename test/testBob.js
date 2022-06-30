@@ -212,27 +212,27 @@ describe("Alice", function () {
     assert(bobTotalDeposit.toString() === (wethPrice * 100).toString());
   });
   
-    it("Alice should have deposited some DAI", async function () {
+  it("Alice should have deposited some DAI", async function () {
       const balance = await daiToken.balanceOf(aliceAddress);
         assert.equal(balance.toString(), aliceTotalDeposit.tostring());
     });
 
-    it("Bob should have deposited some WETH", async function () {
+  it("Bob should have deposited some WETH", async function () {
       const balance = await wethToken.balanceOf(bobAddress);
         assert.equal(balance.toString(), bobTotalDeposit.tostring());
     });
 
-    it("Alice should have a Sould Bond S NFT", async function () {
+  it("Alice should have a Sould Bond S NFT", async function () {
       soulBondS = await soulBondS.balanceOf(aliceAddress);
       assert(soulBondS.toString()>0);
     });
 
-    it("Bob should have a Soul Bond D NFT", async function () {
+  it("Bob should have a Soul Bond D NFT", async function () {
       soulBondD = await soulBondD.balanceOf(bobAddress);
       assert(soulBondD.toString()>0);
     });
 
-    it("Alice shouldn't be able to transfer her NFT", async function () {
+  it("Alice shouldn't be able to transfer her NFT", async function () {
       soulBondS = await soulBondS.balanceOf(aliceAddress);
       let ex;
        try {
@@ -243,7 +243,7 @@ describe("Alice", function () {
            assert(ex, "expected the transaction to revert");
          });
 
-    it("Bob shouldn't be able to transfer his NFT", async function () {
+  it("Bob shouldn't be able to transfer his NFT", async function () {
       soulBondD = await soulBondD.balanceOf(bobAddress);
       let ex;
        try {
@@ -254,21 +254,21 @@ describe("Alice", function () {
            assert(ex, "expected the transaction to revert");
          });
 
-    it("Alice should be able to borrow max amount", async function () {
+  it("Alice should be able to borrow max amount", async function () {
       daiPrice = await sbLending.getLatestPrice(daiToken.address);
       maxAmount= daiPrice/18 * aliceTotalDeposit * 90/100
       
       assert(aliceTotalDeposit.toString()<= maxAmount.toString());
     });
 
-    it("Bob should be able to borrow max amount", async function () {
+  it("Bob should be able to borrow max amount", async function () {
         wethPrice = await sbLending.getLatestPrice(daiToken.address);
         maxAmount= wethPrice/18 * bobTotalDeposit * 70/100
         
         assert(bobTotalDeposit.toString()<= maxAmount.toString());
     });
     
-    it("Alice should not be able to borrow above max amount", async function () {
+  it("Alice should not be able to borrow above max amount", async function () {
       daiPrice = await sbLending.getLatestPrice(daiToken.address);
       maxAmount= daiPrice/18 * aliceTotalDeposit * 90/100
       try{
@@ -280,9 +280,9 @@ describe("Alice", function () {
             }
       assert(ex, "expected the transaction to revert");
       
-    });
+  });
     
-    it("Bob should not be able to borrow above max amount", async function () {
+  it("Bob should not be able to borrow above max amount", async function () {
       wethPrice = await sbLending.getLatestPrice(daiToken.address);
 
       try{
@@ -293,7 +293,7 @@ describe("Alice", function () {
 }
       assert(ex, "expected the transaction to revert");
       
-    });
+  });
 
   
 });

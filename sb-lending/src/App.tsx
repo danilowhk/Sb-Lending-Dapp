@@ -74,11 +74,11 @@ function App() {
   const SBLAddress = "0xc2C2A117B4f9fd7d73FB7695E075216dC0348FBC";
 
   //SoulBond Tokens Address
-  const soulBondSAddress = "0x7228f2c0f1E7948024056e1bc1CC310850f46432";
-  const soulBondAAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
-  const soulBondBAddress = "0xE3F6cbFad9DB22acFD4251dd87B162AffCD2ae69";
-  const soulBondCAddress = "0x46F411c24ffF4338Fb1f09a026Da1a3F3b764Ec5";
-  const soulBondDAddress = "0x43b2EeD08547671220749bFE390fF45516c49134";
+  const soulBondSAddress = "0x2582aF53CecF9cEe6160077316DB28CD7e12605B";
+  const soulBondAAddress = "0xC3e6ef6f95a62d1aD519e972A3fc2A9E85d6368C";
+  const soulBondBAddress = "0x47d1E92850Da99A276D21acDA4e19CdD3f9C4a7b";
+  const soulBondCAddress = "0x8736a26f368e34feA06C259dd271C79C13f38EF1";
+  const soulBondDAddress = "0xab573EC236CAf73d48cCFB00C116943A15be7f35";
 
   const ERC20Abi = WETHArtifact.abi;
   const sbLendingAbi = sbLendingArtifact.abi;
@@ -92,7 +92,8 @@ function App() {
       setSigner(signer);
       setProvider(provider);
       setIsConnected(true);
-      getPoolsData();
+   
+      // console.log("Getting Pool Data")
     } else {
     }
   }
@@ -147,11 +148,11 @@ function App() {
       ).toString();
       const currentHealthFactor = (
         await sbLending.calculateCollateralPercentage(userAddress)
-      ).toString();
+      ).toNumber();
 
       setTotalDepositBalance(totalDepositBalanceData);
       setTotalBorrowBalance(totalBorrowBalanceData);
-      setCurrentHealthFactor(currentHealthFactor);
+      setCurrentHealthFactor(currentHealthFactor/100);
       setMaxCollateralFactor(maxCollateralPercentage);
 
       console.log(`WETH Deposit Balance: ${WETHDepositBalance}`);
@@ -186,17 +187,24 @@ function App() {
       //Add SoulBond Artifacts
       const userAddress = await signer.getAddress();
 
-      // const sClassToken = new ethers.Contract(soulBondSAddress,"sbLendingArtifact.abi",signer);
-      // const aClassToken = new ethers.Contract(soulBondAAddress,sbLendingArtifact.abi,signer);
-      // const bClassToken = new ethers.Contract(soulBondBAddress,sbLendingArtifact.abi,signer);
-      // const cClassToken = new ethers.Contract(soulBondCAddress,sbLendingArtifact.abi,signer);
-      // const dClassToken = new ethers.Contract(soulBondDAddress,sbLendingArtifact.abi,signer);
+      const sClassToken = new ethers.Contract(soulBondSAddress,SoulBondSArtifact.abi,signer);
+      const aClassToken = new ethers.Contract(soulBondAAddress,SoulBondSArtifact.abi,signer);
+      const bClassToken = new ethers.Contract(soulBondBAddress,SoulBondSArtifact.abi,signer);
+      const cClassToken = new ethers.Contract(soulBondCAddress,SoulBondSArtifact.abi,signer);
+      const dClassToken = new ethers.Contract(soulBondDAddress,SoulBondSArtifact.abi,signer);
+      // console.log("SClass Token!");
+      // console.log(sClassToken);
 
       const sClass = await sClassToken.balanceOf(userAddress);
-      const aClass = await sClassToken.balanceOf(userAddress);
-      const bClass = await sClassToken.balanceOf(userAddress);
-      const cClass = await sClassToken.balanceOf(userAddress);
-      const dClass = await sClassToken.balanceOf(userAddress);
+      const aClass = await aClassToken.balanceOf(userAddress);
+      const bClass = await bClassToken.balanceOf(userAddress);
+      const cClass = await cClassToken.balanceOf(userAddress);
+      const dClass = await dClassToken.balanceOf(userAddress);
+      console.log("SClass Token!");
+      console.log(aClass);
+
+      // console.log(SoulBondData);
+
 
       setSoulBondData({
         sClass: sClass,
@@ -205,6 +213,7 @@ function App() {
         cClass: cClass,
         dClass: dClass,
       });
+
     }
   }
 
@@ -227,6 +236,8 @@ function App() {
   }
   useEffect(() => {
     getPoolsData();
+    getSoulBondData();
+   
   });
 
   return (
@@ -245,6 +256,7 @@ function App() {
         totalBorrowBalance={totalBorrowBalance}
         maxCollateralFactor={maxCollateralFactor}
         currentHealthFactor={currentHealthFactor}
+        SoulBondData={SoulBondData}
       />
       <NewDepositModal
         isOpen={isDepositModal}

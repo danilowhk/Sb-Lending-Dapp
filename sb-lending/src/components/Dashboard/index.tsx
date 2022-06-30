@@ -22,6 +22,7 @@ interface DashboardProps {
   totalBorrowBalance: any;
   maxCollateralFactor: any;
   currentHealthFactor: any;
+  SoulBondData: any;
 }
 
 export function Dashboard({
@@ -35,6 +36,7 @@ export function Dashboard({
   totalBorrowBalance,
   maxCollateralFactor,
   currentHealthFactor,
+  SoulBondData
 }: DashboardProps) {
   useEffect(() => {}, [provider]);
 
@@ -48,7 +50,9 @@ export function Dashboard({
         onMaxCollateralFactor={maxCollateralFactor}
         onCurrentHealthFactor={currentHealthFactor}
       />
-      <SoulBondsList />
+      <SoulBondsList 
+        SoulBondData={SoulBondData}
+      />
       <List
         onOpenDepositModal={onOpenDepositModal}
         onOpenBorrowModal={onOpenBorrowModal}

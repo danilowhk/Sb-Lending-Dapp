@@ -53,6 +53,7 @@ contract sbLending {
         updateAllBalances();
         require(ERC20DepositList[_token][msg.sender] >= _value);
         ERC20DepositList[_token][msg.sender] -= _value;
+        // require(calculateCollateralPercentage(msg.sender) < calculateMaxBorrowPercentage(msg.sender));
         IERC20(_token).transferFrom(msg.sender, address(this), _value);
 
     }
@@ -166,7 +167,7 @@ contract sbLending {
 
      function calculateCollateralPercentage(address _user) public view returns(uint256) {
         uint256 totalDeposit = calculateTotalDeposit(_user);
-        uint256 totalBorrow = calculateTotalBorrowed(_user);
+        uint256 totalBorrow = calculateTotalBorrowed(_user).mul(10000);
         uint256 collateralPercentage = 0;
         if(totalDeposit>0){
             collateralPercentage=totalBorrow.div(totalDeposit);
@@ -219,13 +220,14 @@ contract sbLending {
     }
 
     //Calculate the total amount in $ Deposited by an user
-    // TODO: maybe we need to change _user with msg.sender?
-     function calculateTotalDeposit(address _user) public view returns(uint256) {
+     function calculateTotalDeposit(address _user) public view returns(uint256){
         uint256 totalDeposit;
 
 
         for(uint i=0; i< ERC20DepositTokens.length;i++){
-            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user] * getLatestPrice(ERC20DepositTokens[i]) / 10**decimals;
+
+            totalDeposit += ERC20DepositList[ERC20DepositTokens[i]][_user]*getLatestPrice(ERC20DepositTokens[i]);
+
         }
         return totalDeposit;
     }
